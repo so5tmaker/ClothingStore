@@ -1,2 +1,2 @@
 # ClothingStore
-The React App for clothing store
+The React App for Clothing Store
