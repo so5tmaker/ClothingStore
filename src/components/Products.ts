@@ -1,6 +1,3 @@
-import React from 'react';
-import Grid from './components/Grid/Grid';
-
 const xboxDescription = `
 <div>
     <ul>
@@ -63,6 +60,20 @@ const products = [
         ],
         gallery: ['https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/iphone-12-pro-family-hero?wid=940&amp;hei=1112&amp;fmt=jpeg&amp;qlt=80&amp;.v=1604021663000']
     },
+    {id:'apple-airpods-pro', name: 'AirPods Pro', brand: 'Apple', 
+        description: airpodsDescription, category:'tech', 
+        prises:[{amount:249, currency:{label:'USD', symbol:'$'}}], 
+        attributes: [],
+        gallery: ['https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MWP22?wid=572&hei=572&fmt=jpeg&qlt=95&.v=1591634795000'],
+        inStock: false
+    },
+    {id:'apple-airtag', name: 'AirTag', brand: 'Apple', 
+        description: airtagDescription, category:'tech', 
+        prises:[{amount:100, currency:{label:'USD', symbol:'$'}}], 
+        attributes: [],
+        gallery: ['https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/airtag-double-select-202104?wid=445&hei=370&fmt=jpeg&qlt=95&.v=1617761672000'],
+        inStock: false
+    },
     {id:'ps-5', name: 'PlayStation 5', brand: 'Sony',
         description: '<p>A good gaming console. Plays games of PS4! Enjoy if you can buy it mwahahahaha</p>', category:'tech', 
         prises:[{amount:700, currency:{label:'USD', symbol:'$'}}], 
@@ -123,48 +134,4 @@ const products = [
     },
 ];
 
-const productsold: Product[] = [
-    
-
-    new Product('AirPods Pro')
-        .setId('apple-airpods-pro')
-        .setPrice(249)
-        .setBrand('Apple')
-        .addImages([
-            'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MWP22?wid=572&hei=572&fmt=jpeg&qlt=95&.v=1591634795000'
-        ])
-        .setInStock(false)
-        .setDescription(airpodsDescription)
-        .setCategory(Category.tech),
-
-    new Product('AirTag')
-        .setId('apple-airtag')
-        .setPrice(100)
-        .setBrand('Apple')
-        .addImages([
-            'https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/airtag-double-select-202104?wid=445&hei=370&fmt=jpeg&qlt=95&.v=1617761672000'
-        ])
-        .setDescription(airtagDescription)
-        .setCategory(Category.tech)
-
-// GraphQL query for Products
-// {
-//     product(id:'apple-imac-2021') {
-//          name 
-//       prices{
-//         currency {
-//           label
-//           symbol
-//         }
-//         amount
-//       }
-//       description
-//       attributes{
-//         id
-//         items{
-//           displayValue
-//         }
-//       }
-//       gallery
-//     }
-//   }
+export { products };
