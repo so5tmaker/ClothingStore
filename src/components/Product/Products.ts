@@ -42,7 +42,7 @@ const airtagDescription = `
 const products = [
     {id:'apple-imac-2021', name: 'iMac 2021', brand: 'Apple', 
         description: '<p>The new iMac!</p>', category:'tech', 
-        prises:[{amount:1400, currency:{label:'USD', symbol:'$'}}],
+        prices:[{amount:1400, currency:{label:'USD', symbol:'$'}}],
         attributes: [
             {id: 'Capacity', items: [{displayValue: '256GB'},{displayValue: '512GB'}]},
             {id: 'With USB 3 ports', items: [{displayValue: 'Yes'},{displayValue: 'No'}]},
@@ -52,7 +52,7 @@ const products = [
     },
     {id:'apple-iphone-12-pro', name: 'iPhone 12 Pro', brand: 'Apple', 
         description: '<p>This is iPhone 12. Nothing else to say.</p>', category:'tech', 
-        prises:[{amount:830, currency:{label:'USD', symbol:'$'}}], 
+        prices:[{amount:830, currency:{label:'USD', symbol:'$'}}], 
         attributes: [
             {id: 'Capacity', items: [{displayValue: '256GB'},{displayValue: '512GB'}]},
             {id: 'With USB 3 ports', items: [{displayValue: 'Yes'},{displayValue: 'No'}]},
@@ -62,21 +62,21 @@ const products = [
     },
     {id:'apple-airpods-pro', name: 'AirPods Pro', brand: 'Apple', 
         description: airpodsDescription, category:'tech', 
-        prises:[{amount:249, currency:{label:'USD', symbol:'$'}}], 
+        prices:[{amount:249, currency:{label:'USD', symbol:'$'}}], 
         attributes: [],
         gallery: ['https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/MWP22?wid=572&hei=572&fmt=jpeg&qlt=95&.v=1591634795000'],
         inStock: false
     },
     {id:'apple-airtag', name: 'AirTag', brand: 'Apple', 
         description: airtagDescription, category:'tech', 
-        prises:[{amount:100, currency:{label:'USD', symbol:'$'}}], 
+        prices:[{amount:100, currency:{label:'USD', symbol:'$'}}], 
         attributes: [],
         gallery: ['https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/airtag-double-select-202104?wid=445&hei=370&fmt=jpeg&qlt=95&.v=1617761672000'],
         inStock: false
     },
     {id:'ps-5', name: 'PlayStation 5', brand: 'Sony',
         description: '<p>A good gaming console. Plays games of PS4! Enjoy if you can buy it mwahahahaha</p>', category:'tech', 
-        prises:[{amount:700, currency:{label:'USD', symbol:'$'}}], 
+        prices:[{amount:700, currency:{label:'USD', symbol:'$'}}], 
         attributes: [
             {id: 'Capacity', items: [{displayValue: '256GB'},{displayValue: '512GB'}]},
             {id: 'Color', items: [{displayValue: 'Green', value: '#44FF03'},{displayValue: 'Cyan', value:'#03FFF7'}]},
@@ -91,7 +91,7 @@ const products = [
     },
     {id:'xbox-series-s', name: 'Xbox Series S 512GB', brand: 'Microsoft',
         description: xboxDescription, category:'tech', 
-        prises:[{amount:277, currency:{label:'USD', symbol:'$'}}], 
+        prices:[{amount:277, currency:{label:'USD', symbol:'$'}}], 
         attributes: [
             {id: 'Capacity', items: [{displayValue: '256GB'},{displayValue: '512GB'}]},
             {id: 'Color', items: [{displayValue: 'Green', value: '#44FF03'},{displayValue: 'Cyan', value:'#03FFF7'}]},
@@ -106,7 +106,7 @@ const products = [
     },
     {id:'huarache-x-stussy-le', name: 'Nike Air Huarache Le', brand: 'Nike x Stussy', 
         description: '<p>Great sneakers for everyday use!</p>', category:'clothes', 
-        prises:[{amount:120, currency:{label:'USD', symbol:'$'}}], 
+        prices:[{amount:120, currency:{label:'USD', symbol:'$'}}], 
         attributes: [
             {id: 'Size', items: [{displayValue: '40'},{displayValue: '41'},{displayValue: '42'},{displayValue: '43'}]}
         ],
@@ -119,7 +119,7 @@ const products = [
     },
     {id:'jacket-canada-goosee', name: 'Jacket', brand: 'Canada Goose', 
         description: '<p>Awesome winter jacket</p>', category:'clothes', 
-        prises:[{amount:430, currency:{label:'USD', symbol:'$'}}], 
+        prices:[{amount:430, currency:{label:'USD', symbol:'$'}}], 
         attributes: [
             {id: 'Size', items: [{displayValue: 'Small'},{displayValue: 'Medium'},{displayValue: 'Large'},{displayValue: 'Extra Large'}]}
         ],
@@ -134,4 +134,4 @@ const products = [
     },
 ];
 
-export { products };
+export default products;

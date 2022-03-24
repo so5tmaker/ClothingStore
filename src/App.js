@@ -1,7 +1,8 @@
 import React from 'react';
+import Products from './components/Product/Products';
 
 function App() {
-  return (<div className='wrapper'>Category name</div>);
+  return (<Products />);
 }
 
 export default App;
