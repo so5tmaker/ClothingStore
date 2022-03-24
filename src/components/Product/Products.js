@@ -10,14 +10,19 @@ class Products extends Component {
   }
   render() {
     const ProductList = this.state.products.map((product) => (
-      <Grid item key={product.id} column={true} xs={12} sm={6} md={4} lg={3}>
+      <Grid item key={product.id} column={true} lg={4}>
         <Product product={product} />
       </Grid>
     ));
     return (
-      <Grid row={true}>
-        {ProductList}
-      </Grid>
+      <div className='container'>
+        <Grid row={true} justify='flex-start'>
+          <h2>All</h2>
+        </Grid>
+        <Grid row={true} justify='flex-start'>
+          {ProductList}
+        </Grid>
+      </div>
     );
   }
 };
