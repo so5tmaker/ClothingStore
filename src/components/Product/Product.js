@@ -12,6 +12,8 @@ class Product extends Component {
         <div className="image-container">
           <img src={gallery[0]} alt={name} />
         </div>
+        <div className="product-cart">
+        </div>
         <div className="product-title">
           {name}
         </div>
