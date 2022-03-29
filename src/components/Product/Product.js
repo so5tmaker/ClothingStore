@@ -4,21 +4,31 @@ import './Product.css';
 class Product extends Component {
   render() {
     const { product } = this.props;
-    const { gallery, name, prices } = product;
+    const { gallery, name, prices, inStock } = product;
     const { amount, currency } = prices[0];
     const { symbol } = currency;
+    let divOutOfStock = '';
+    let imgOutOfStock = '';
+    let divProductCart = <div className="product-cart"></div>
+    if (inStock === false) {
+      divOutOfStock = <div className="out-of-stock">
+        OUT OF STOCK
+      </div>;
+      imgOutOfStock = "image-out-of-stock";
+      divProductCart = '';
+    }
     return (
       <div className="product-container">
-        <div className="image-container">
+        <div className={"image-container " + imgOutOfStock}>
           <img src={gallery[0]} alt={name} />
         </div>
-        <div className="product-cart">
-        </div>
-        <div className="product-title">
+        {divOutOfStock}
+        {divProductCart}
+        <div className={"product-title " + imgOutOfStock}>
           {name}
         </div>
-        <div className="product-price">
-          <strong>{symbol + '' + amount}</strong>
+        <div className={"product-price " + imgOutOfStock}>
+          <strong>{symbol + amount}</strong>
         </div>
       </div>
     );
