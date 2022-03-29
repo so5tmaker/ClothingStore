@@ -98,7 +98,7 @@ li:nth-child(3) {
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
-  left: 88%;
+  left: 86%;
   top: 70px;
   font-family: "Raleway";
   font-style: normal;
@@ -113,4 +113,9 @@ li:nth-child(3) {
 .currency-item {
   margin: 0px 0px;
   padding: 10px;
+}
+
+.currency-item:hover{
+  background-color: #5ece7b;
+  cursor: pointer;
 }

@@ -35,10 +35,22 @@ class Products extends Component {
     return '';
   }
 
-  currencyClick(currency) {
+  currencyClick(e) {
     this.setState({
-      currency: currency,
+      currency: e.target.innerText,
+      currencyIsVisible: false,
+    });
+  }
+
+  currencyBoxClick(e) {
+    this.setState({
       currencyIsVisible: true
+    });
+  }
+
+  commonClick(e) {
+    this.setState({
+      currencyIsVisible: e.target.className === 'cart'
     });
   }
 
@@ -49,15 +61,15 @@ class Products extends Component {
       </Grid>
     ));
     const currencyArray = ['$ USD', '€ EUR', '¥ JPY'].map(currency => (
-      <div className="currency-item">{currency}</div>
+      <div className="currency-item" onClick={(e)=>this.currencyClick(e)}>{currency}</div>
     ));
     let currencyList = '';
-    if (this.state.currency === true) {
+    if (this.state.currencyIsVisible) {
       currencyList = <div className="currency-list">{currencyArray}</div>
     }
 
     return (
-      <div className='container'>
+      <div className='container' onClick={(e) => this.commonClick(e)}>
         <div className='navbar'>
           <Grid row={true} justify='flex-start'>
             <Grid column={true} lg={8}>
@@ -74,7 +86,7 @@ class Products extends Component {
             </Grid>
             <Grid column={true} lg={2}>
               <Grid row={true} justify='center'>
-                <li className="cart">$ ∨</li>
+                <li className="cart" onClick={(e) => this.currencyBoxClick(e)}>$ ∨</li>
                 <li className="cart"></li>
                 <li className="round">2</li>
               </Grid>
