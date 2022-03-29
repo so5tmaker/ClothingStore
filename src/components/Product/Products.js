@@ -10,7 +10,9 @@ class Products extends Component {
       products: products,
       category: 'all',
       currencyIsVisible: false,
-      currency: '$ USD'
+      currency: 'USD',
+      symbol: '$',
+      cart: []
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
@@ -37,35 +39,33 @@ class Products extends Component {
 
   currencyClick(e) {
     this.setState({
-      currency: e.target.innerText,
-      currencyIsVisible: false,
-    });
-  }
-
-  currencyBoxClick(e) {
-    this.setState({
-      currencyIsVisible: true
+      currency: e.target.innerText.slice(2),
+      symbol: e.target.innerText.substring(0, 1)
     });
   }
 
   commonClick(e) {
     this.setState({
-      currencyIsVisible: e.target.className === 'cart'
+      currencyIsVisible: e.target.className === 'symbol'
     });
   }
 
   render() {
     const ProductList = this.state.products.map((product) => (
       <Grid key={product.id} column={true} lg={4}>
-        <Product product={product} />
+        <Product product={product} currency={this.state.currency} />
       </Grid>
     ));
     const currencyArray = ['$ USD', '€ EUR', '¥ JPY'].map(currency => (
-      <div className="currency-item" onClick={(e)=>this.currencyClick(e)}>{currency}</div>
+      <div className="currency-item" onClick={(e) => this.currencyClick(e)}>{currency}</div>
     ));
     let currencyList = '';
     if (this.state.currencyIsVisible) {
       currencyList = <div className="currency-list">{currencyArray}</div>
+    }
+    let quantityRound = '';
+    if (this.state.cart.length !== 0) {
+      quantityRound = <li className="round">{this.this.state.cart.length}</li>
     }
 
     return (
@@ -86,9 +86,9 @@ class Products extends Component {
             </Grid>
             <Grid column={true} lg={2}>
               <Grid row={true} justify='center'>
-                <li className="cart" onClick={(e) => this.currencyBoxClick(e)}>$ ∨</li>
+                <li className="symbol">{this.state.symbol} ∨</li>
                 <li className="cart"></li>
-                <li className="round">2</li>
+                {quantityRound}
               </Grid>
             </Grid>
           </Grid>

@@ -3,9 +3,9 @@ import './Product.css';
 
 class Product extends Component {
   render() {
-    const { product } = this.props;
+    const { product, currency: label } = this.props;
     const { gallery, name, prices, inStock } = product;
-    const { amount, currency } = prices[0];
+    const { amount, currency } = prices.filter(record => record.currency.label === label)[0];
     const { symbol } = currency;
     let divOutOfStock = '';
     let imgOutOfStock = '';
