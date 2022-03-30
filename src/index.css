@@ -98,8 +98,9 @@ li:nth-child(3) {
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
-  left: 86%;
+  right: 800px;
   top: 70px;
+  width:fit-content;
   font-family: "Raleway";
   font-style: normal;
   font-weight: 500;

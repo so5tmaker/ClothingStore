@@ -12,6 +12,7 @@ class Products extends Component {
       currencyIsVisible: false,
       currency: 'USD',
       symbol: '$',
+      divOrientation: { top: 0, right: 0 },
       cart: []
     };
     this.linkClick = this.linkClick.bind(this);
@@ -46,7 +47,8 @@ class Products extends Component {
 
   commonClick(e) {
     this.setState({
-      currencyIsVisible: e.target.className === 'symbol'
+      currencyIsVisible: e.target.className === 'symbol',
+      divOrientation: { top: e.clientY, left: e.clientX }
     });
   }
 
@@ -57,11 +59,12 @@ class Products extends Component {
       </Grid>
     ));
     const currencyArray = ['$ USD', '€ EUR', '¥ JPY'].map(currency => (
-      <div className="currency-item" onClick={(e) => this.currencyClick(e)}>{currency}</div>
+      <div className="currency-item" key={currency} onClick={(e) => this.currencyClick(e)}>{currency}</div>
     ));
     let currencyList = '';
     if (this.state.currencyIsVisible) {
-      currencyList = <div className="currency-list">{currencyArray}</div>
+      const { top, left } = this.state.divOrientation;
+      currencyList = <div style={{ top: top + 15, left: left - 20 }} className="currency-list">{currencyArray}</div>
     }
     let quantityRound = '';
     if (this.state.cart.length !== 0) {

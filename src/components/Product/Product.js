@@ -4,7 +4,7 @@ import './Product.css';
 class Product extends Component {
   render() {
     const { product, currency: label } = this.props;
-    const { gallery, name, prices, inStock } = product;
+    const { gallery, name, prices, inStock, id } = product;
     const { amount, currency } = prices.filter(record => record.currency.label === label)[0];
     const { symbol } = currency;
     let divOutOfStock = '';
@@ -18,7 +18,7 @@ class Product extends Component {
       divProductCart = '';
     }
     return (
-      <div className="product-container">
+      <div key={id} className="product-container">
         <div className={"image-container " + imgOutOfStock}>
           <img src={gallery[0]} alt={name} />
         </div>
