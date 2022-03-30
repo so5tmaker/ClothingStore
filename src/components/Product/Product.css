@@ -4,6 +4,7 @@
   transition: 0.3s;
   animation: ease-in-out;
   padding: 16px;
+  padding-left: 100px;
 }
 
 .product-container:hover {
@@ -34,7 +35,7 @@
   font-weight: 300;
 }
 
-.product-cart {
+.button-cart {
   display: none;
   width: 52px;
   height: 52px;
@@ -44,9 +45,10 @@
   background: url(../../images/green-card.png) no-repeat;
 }
 
-.product-container:hover .product-cart {
+.product-container:hover .button-cart {
   display: block;
   position: absolute;
+  cursor: pointer;
 }
 
 .product-price {

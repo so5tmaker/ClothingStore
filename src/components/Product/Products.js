@@ -10,6 +10,7 @@ class Products extends Component {
       products: products,
       category: 'all',
       currencyIsVisible: false,
+      miniCartIsVisible: false,
       currency: 'USD',
       symbol: '$',
       divOrientation: { top: 0, right: 0 },
@@ -17,6 +18,8 @@ class Products extends Component {
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
+    this.commonClick = this.commonClick.bind(this);
+    this.addToCart = this.addToCart.bind(this);
   }
 
   linkClick(category, e) {
@@ -47,62 +50,103 @@ class Products extends Component {
 
   commonClick(e) {
     this.setState({
-      currencyIsVisible: e.target.className === 'symbol',
+      currencyIsVisible: e.target.className === "vector",
+      miniCartIsVisible: e.target.className === "cart",
       divOrientation: { top: e.clientY, left: e.clientX }
     });
+  }
+
+  addToCart(id) {
+    const miniCartArray = this.state.cart;
+    let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id)
+    if (indexProduct === -1) {
+      let product = this.state.products.find(product => product.id === id)
+      this.state.cart.push({ product: product, quantity: 1 });
+    } else {
+      miniCartArray[indexProduct].quantity = miniCartArray[indexProduct].quantity + 1;
+      this.setState({
+        cart: miniCartArray
+      });
+    }
   }
 
   render() {
     const ProductList = this.state.products.map((product) => (
       <Grid key={product.id} column={true} lg={4}>
-        <Product product={product} currency={this.state.currency} />
+        <Product product={product} currency={this.state.currency} onChangeQuantity={this.addToCart} />
       </Grid>
     ));
     const currencyArray = ['$ USD', '€ EUR', '¥ JPY'].map(currency => (
       <div className="currency-item" key={currency} onClick={(e) => this.currencyClick(e)}>{currency}</div>
     ));
     let currencyList = '';
+    const { top, left } = this.state.divOrientation;
     if (this.state.currencyIsVisible) {
-      const { top, left } = this.state.divOrientation;
-      currencyList = <div style={{ top: top + 15, left: left - 20 }} className="currency-list">{currencyArray}</div>
+      currencyList =
+        <div className="currency-list"
+          style={{ top: top + 15, left: left - 20 }}>
+          {currencyArray}
+        </div>
     }
     let quantityRound = '';
     if (this.state.cart.length !== 0) {
-      quantityRound = <li className="round">{this.this.state.cart.length}</li>
+      quantityRound = <li className="round">{this.state.cart.length}</li>
+    }
+    const miniCartArray = this.state.cart;
+    let divMiniCart = '';
+    let innerContaner = '';
+    if (this.state.miniCartIsVisible && miniCartArray.length!==0) {
+      const miniCartList = miniCartArray.map((product) => (
+        <Grid key={product.id} column={true} lg={4}>
+
+        </Grid>
+      ));
+      divMiniCart =
+        <div
+          className="mini-cart-container"
+          style={{ top: top + 35, left: left - 350 }}>
+          <div className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
+          {miniCartList}
+        </div>
+      innerContaner = 'inner-container';
     }
 
     return (
       <div className='container' onClick={(e) => this.commonClick(e)}>
-        <div className='navbar'>
+          <div className='navbar'>
+            <Grid row={true} justify='flex-start'>
+              <Grid column={true} lg={8}>
+                <Grid row={true} justify='flex-start'>
+                  <li onClick={e => this.linkClick('all', e)} className={this.isSelected('all')}>All</li>
+                  <li onClick={e => this.linkClick('tech', e)} className={this.isSelected('tech')}>Tech</li>
+                  <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
+                </Grid>
+              </Grid>
+              <Grid column={true} lg={2}>
+                <Grid row={true} justify='flex-start'>
+                  <li className="image"></li>
+                </Grid>
+              </Grid>
+              <Grid column={true} lg={2}>
+                <Grid row={true} justify='center'>
+                  <li className="symbol">{this.state.symbol}</li>
+                  <li className="vector"></li>
+                  <li className="cart"></li>
+                  {quantityRound}
+                </Grid>
+              </Grid>
+            </Grid>
+          </div>
+          <div className={innerContaner}>
           <Grid row={true} justify='flex-start'>
-            <Grid column={true} lg={8}>
-              <Grid row={true} justify='flex-start'>
-                <li onClick={e => this.linkClick('all', e)} className={this.isSelected('all')}>All</li>
-                <li onClick={e => this.linkClick('tech', e)} className={this.isSelected('tech')}>Tech</li>
-                <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
-              </Grid>
-            </Grid>
-            <Grid column={true} lg={2}>
-              <Grid row={true} justify='flex-start'>
-                <li className="image"></li>
-              </Grid>
-            </Grid>
-            <Grid column={true} lg={2}>
-              <Grid row={true} justify='center'>
-                <li className="symbol">{this.state.symbol} ∨</li>
-                <li className="cart"></li>
-                {quantityRound}
-              </Grid>
-            </Grid>
+            <h2>{this.state.category.substring(0, 1).toUpperCase()}{this.state.category.slice(1)}</h2>
           </Grid>
+          <Grid row={true} justify='flex-start'>
+            {ProductList}
+          </Grid>
+          {currencyList}
         </div>
-        <Grid row={true} justify='flex-start'>
-          <h2>{this.state.category.substring(0, 1).toUpperCase()}{this.state.category.slice(1)}</h2>
-        </Grid>
-        <Grid row={true} justify='flex-start'>
-          {ProductList}
-        </Grid>
-        {currencyList}
+        {divMiniCart}
       </div>
     );
   }

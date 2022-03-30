@@ -2,6 +2,15 @@ import React, { Component } from "react";
 import './Product.css';
 
 class Product extends Component {
+  constructor(props) {
+    super(props);
+    this.onChangeQuantity = this.onChangeQuantity.bind(this);
+  }
+
+  onChangeQuantity(e) {
+    this.props.onChangeQuantity(e.target.title);
+  }
+
   render() {
     const { product, currency: label } = this.props;
     const { gallery, name, prices, inStock, id } = product;
@@ -9,13 +18,13 @@ class Product extends Component {
     const { symbol } = currency;
     let divOutOfStock = '';
     let imgOutOfStock = '';
-    let divProductCart = <div className="product-cart"></div>
+    let divButtonCart = <div className="button-cart" title={id} onClick={this.onChangeQuantity}></div>
     if (inStock === false) {
       divOutOfStock = <div className="out-of-stock">
         OUT OF STOCK
       </div>;
       imgOutOfStock = "image-out-of-stock";
-      divProductCart = '';
+      divButtonCart = '';
     }
     return (
       <div key={id} className="product-container">
@@ -23,7 +32,7 @@ class Product extends Component {
           <img src={gallery[0]} alt={name} />
         </div>
         {divOutOfStock}
-        {divProductCart}
+        {divButtonCart}
         <div className={"product-title " + imgOutOfStock}>
           {name}
         </div>
