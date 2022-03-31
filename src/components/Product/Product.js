@@ -37,7 +37,7 @@ class Product extends Component {
           {name}
         </div>
         <div className={"product-price " + imgOutOfStock}>
-          <strong>{symbol + amount}</strong>
+          <strong>{symbol + amount + '.00'}</strong>
         </div>
       </div>
     );

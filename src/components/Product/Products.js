@@ -62,7 +62,9 @@ class Products extends Component {
     let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id)
     if (indexProduct === -1) {
       let product = this.state.products.find(product => product.id === id)
-      this.state.cart.push({ product: product, quantity: 1 });
+      const { prices } = product;
+      const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
+      this.state.cart.push({ product: product, quantity: 1, amount, symbol });
     } else {
       miniCartArray[indexProduct].quantity = miniCartArray[indexProduct].quantity + 1;
       this.setState({
@@ -97,19 +99,58 @@ class Products extends Component {
     let divMiniCart = '';
     let innerContaner = '';
     if (this.state.miniCartIsVisible && miniCartArray.length !== 0) {
-      const miniCartList = miniCartArray.map((product) => {
-        if (product.id !== undefined) {
-          <Grid key={product.id + 'mini-cart'} column={true} lg={4}>
-
-          </Grid>
-        }
-      });
+      let miniCartAmount = 0;
+      for (let item of miniCartArray) {
+        miniCartAmount += item.amount * item.quantity;
+      }
+      const miniCartList = miniCartArray.filter(item => item.product.id !== undefined)
+        .map((item) => {
+          const miniCartAttributesList = item.product.attributes.map(attribute => {
+            if (attribute.id === "Color") {
+              const mcItems = attribute.items.map(item => {
+                return (
+                  <div className="mc-quantity-switcher" style={{ background: item.value }}></div>
+                )
+              });
+              return (<div>
+                <div>{attribute.id + ':'}</div>
+                <div className="mc-col-attributes">{mcItems}</div>
+              </div>
+              );
+            }
+          });
+          return (<div key={item.product.id + 'mini-cart'} className="mini-cart-item">
+            <div className="mc-col-name">
+              <div>
+                {item.product.name}
+              </div>
+              <div>
+                {item.symbol + item.amount + '.00'}
+              </div>
+                {miniCartAttributesList}
+            </div>
+            <div className="mc-col-quantity">
+              <div className="mc-quantity-switcher">−</div>
+              <div className="mc-quantity">{item.quantity}</div>
+              <div className="mc-quantity-switcher">+</div>
+            </div>
+            <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
+          </div>)
+        });
       divMiniCart =
         <div
           className="mini-cart-container"
-          style={{ top: top + 35, left: left - 350 }}>
+          style={{ top: top + 45, left: left - 350 }}>
           <div key={'mini-cart-key'} className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
           {miniCartList}
+          <div className="mc-total">
+            <div>Total</div>
+            <div>{this.state.symbol + miniCartAmount + '.00'}</div>
+          </div>
+          <div className="mc-buttons">
+            <div>view bag</div>
+            <div>check out</div>
+          </div>
         </div>
       innerContaner = 'inner-container';
     }

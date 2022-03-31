@@ -205,7 +205,7 @@ const products = [
       "https://images-na.ssl-images-amazon.com/images/I/61IYrCrBzxL._SL1500_.jpg",
       "https://images-na.ssl-images-amazon.com/images/I/61RnXmpAmIL._SL1500_.jpg",
     ],
-    inStock: false,
+    inStock: true,
   },
   {
     id: "huarache-x-stussy-le",
