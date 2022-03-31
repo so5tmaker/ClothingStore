@@ -51,7 +51,8 @@ class Products extends Component {
   commonClick(e) {
     this.setState({
       currencyIsVisible: e.target.className === "vector",
-      miniCartIsVisible: e.target.className === "cart",
+      miniCartIsVisible: e.target.className === "cart" ||
+        e.target.className === "round",
       divOrientation: { top: e.clientY, left: e.clientX }
     });
   }
@@ -95,17 +96,19 @@ class Products extends Component {
     const miniCartArray = this.state.cart;
     let divMiniCart = '';
     let innerContaner = '';
-    if (this.state.miniCartIsVisible && miniCartArray.length!==0) {
-      const miniCartList = miniCartArray.map((product) => (
-        <Grid key={product.id} column={true} lg={4}>
+    if (this.state.miniCartIsVisible && miniCartArray.length !== 0) {
+      const miniCartList = miniCartArray.map((product) => {
+        if (product.id !== undefined) {
+          <Grid key={product.id + 'mini-cart'} column={true} lg={4}>
 
-        </Grid>
-      ));
+          </Grid>
+        }
+      });
       divMiniCart =
         <div
           className="mini-cart-container"
           style={{ top: top + 35, left: left - 350 }}>
-          <div className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
+          <div key={'mini-cart-key'} className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
           {miniCartList}
         </div>
       innerContaner = 'inner-container';
@@ -113,37 +116,22 @@ class Products extends Component {
 
     return (
       <div className='container' onClick={(e) => this.commonClick(e)}>
-          <div className='navbar'>
-            <Grid row={true} justify='flex-start'>
-              <Grid column={true} lg={8}>
-                <Grid row={true} justify='flex-start'>
-                  <li onClick={e => this.linkClick('all', e)} className={this.isSelected('all')}>All</li>
-                  <li onClick={e => this.linkClick('tech', e)} className={this.isSelected('tech')}>Tech</li>
-                  <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
-                </Grid>
-              </Grid>
-              <Grid column={true} lg={2}>
-                <Grid row={true} justify='flex-start'>
-                  <li className="image"></li>
-                </Grid>
-              </Grid>
-              <Grid column={true} lg={2}>
-                <Grid row={true} justify='center'>
-                  <li className="symbol">{this.state.symbol}</li>
-                  <li className="vector"></li>
-                  <li className="cart"></li>
-                  {quantityRound}
-                </Grid>
-              </Grid>
-            </Grid>
-          </div>
-          <div className={innerContaner}>
-          <Grid row={true} justify='flex-start'>
-            <h2>{this.state.category.substring(0, 1).toUpperCase()}{this.state.category.slice(1)}</h2>
-          </Grid>
-          <Grid row={true} justify='flex-start'>
+        <div className='navbar'>
+          <li onClick={e => this.linkClick('all', e)} className={this.isSelected('all')}>All</li>
+          <li onClick={e => this.linkClick('tech', e)} className={this.isSelected('tech')}>Tech</li>
+          <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
+          <li></li>
+          <li className="image"></li>
+          <li className="symbol">{this.state.symbol}</li>
+          <li className="vector"></li>
+          <li className="cart"></li>
+          {quantityRound}
+        </div>
+        <div className={'product-content ' + innerContaner}>
+          <h2>{this.state.category.substring(0, 1).toUpperCase()}{this.state.category.slice(1)}</h2>
+          <div className='product-items'>
             {ProductList}
-          </Grid>
+          </div>
           {currencyList}
         </div>
         {divMiniCart}

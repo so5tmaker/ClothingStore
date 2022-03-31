@@ -4,7 +4,6 @@
   transition: 0.3s;
   animation: ease-in-out;
   padding: 16px;
-  padding-left: 100px;
 }
 
 .product-container:hover {

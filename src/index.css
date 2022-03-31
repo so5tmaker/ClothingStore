@@ -1,5 +1,6 @@
 body {
-  margin: 0;
+  margin: 0 auto;
+  min-width: 1440px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -12,23 +13,19 @@ code {
     monospace;
 }
 
-.wrapper {
-  padding-top: 5rem;
-  margin-top: 0 auto;
-  width: 600px;
-}
-
 .container {
   background-color: white;
+}
+
+.container .product-content,
+.navbar {
   padding-left: 100px;
+  padding-right: 100px;
 }
 
 .inner-container {
-  opacity:0.5;
+  opacity: 0.5;
   background: rgba(57, 55, 72, 0.22);
-  position: absolute;
-  top: 95px;
-  left:530px;
 }
 
 h2 {
@@ -37,19 +34,26 @@ h2 {
   font-size: 42px;
   font-weight: normal;
   line-height: 67.2px;
-  margin-right: auto;
-  padding-left: 100px;
+  margin: 0 auto;
+  padding: 80px 0px;
 }
 
 .navbar {
-  height: 80px;
-  padding: 40px 0px 0px 200px;
+  height: 60px;
+  padding-top: 40px;
+  display: flex;
+  flex-direction: row;
+}
+
+.product-items{
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 }
 
 .navbar li {
   list-style-type: none;
   text-transform: uppercase;
-  padding-bottom: 40px;
 }
 
 .navbar li:hover {
@@ -59,21 +63,28 @@ h2 {
 .navbar li:first-child,
 li:nth-child(2),
 li:nth-child(3) {
-  margin-right: 20px;
+  margin-right: 32px;
+  width: 3%;
+}
+
+.navbar li:nth-child(4) {
+  width: 30%;
 }
 
 .navbar li.image {
-  margin-left: -120%;
   background: url(images/icon.png) no-repeat;
   padding: 20px;
+  width: 35%;
 }
 
 .navbar li.image:hover {
   cursor: text;
 }
 
-.navbar li.symbol, li.cart,
-li.vector , li.round{
+.navbar li.symbol,
+li.cart,
+li.vector,
+li.round {
   padding-bottom: 0px;
 }
 
@@ -88,7 +99,7 @@ li.vector , li.round{
 
 .navbar li.vector {
   background: url(images/vector.svg) no-repeat;
-  padding: 0px 8px 0px 0px;
+  padding-right: 15px;
   margin-top: 10px;
 }
 
@@ -114,7 +125,7 @@ li.vector , li.round{
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
-  margin: -10px 0px 0px -35px;
+  margin: -8px 0px 0px -15px;
 }
 
 .currency-list {
@@ -146,13 +157,11 @@ li.vector , li.round{
   cursor: pointer;
 }
 
-.mini-cart-container{
+.mini-cart-container {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   position: absolute;
-  right: 800px;
-  top: 70px;
   width: 325px;
   font-family: "Raleway";
   font-style: normal;
