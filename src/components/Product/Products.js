@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Grid from '../Grid/Grid.tsx';
 import Product from './Product';
+import MiniCart from '../MiniCart/MiniCart';
 import products from './Products.ts';
 
 class Products extends Component {
@@ -13,8 +14,9 @@ class Products extends Component {
       miniCartIsVisible: false,
       currency: 'USD',
       symbol: '$',
-      divOrientation: { top: 0, right: 0 },
-      cart: []
+      divOrientation: { top: 0, left: 0 },
+      cart: [],
+      innerContaner: ''
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
@@ -49,12 +51,22 @@ class Products extends Component {
   }
 
   commonClick(e) {
-    this.setState({
-      currencyIsVisible: e.target.className === "vector",
-      miniCartIsVisible: e.target.className === "cart" ||
-        e.target.className === "round",
-      divOrientation: { top: e.clientY, left: e.clientX }
-    });
+    let parent = document.querySelector('.mini-cart-container');
+    let doNotCloseMiniCart = false;
+    if (parent !== null) {
+      doNotCloseMiniCart = parent.contains(e.target);
+    }
+    if (!doNotCloseMiniCart) {
+      const miniCartIsVisible = (e.target.className === "cart" ||
+        e.target.className === "round") && this.state.cart.length !== 0;
+      const innerContaner = miniCartIsVisible ? 'inner-container' : '';
+      this.setState({
+        currencyIsVisible: e.target.className === "vector",
+        miniCartIsVisible: miniCartIsVisible,
+        innerContaner: innerContaner,
+        divOrientation: { top: e.clientY, left: e.clientX }
+      });
+    }
   }
 
   addToCart(id) {
@@ -95,65 +107,6 @@ class Products extends Component {
     if (this.state.cart.length !== 0) {
       quantityRound = <li className="round">{this.state.cart.length}</li>
     }
-    const miniCartArray = this.state.cart;
-    let divMiniCart = '';
-    let innerContaner = '';
-    if (this.state.miniCartIsVisible && miniCartArray.length !== 0) {
-      let miniCartAmount = 0;
-      for (let item of miniCartArray) {
-        miniCartAmount += item.amount * item.quantity;
-      }
-      const miniCartList = miniCartArray.filter(item => item.product.id !== undefined)
-        .map((item) => {
-          const miniCartAttributesList = item.product.attributes.map(attribute => {
-            if (attribute.id === "Color") {
-              const mcItems = attribute.items.map(item => {
-                return (
-                  <div className="mc-quantity-switcher" style={{ background: item.value }}></div>
-                )
-              });
-              return (<div>
-                <div>{attribute.id + ':'}</div>
-                <div className="mc-col-attributes">{mcItems}</div>
-              </div>
-              );
-            }
-          });
-          return (<div key={item.product.id + 'mini-cart'} className="mini-cart-item">
-            <div className="mc-col-name">
-              <div>
-                {item.product.name}
-              </div>
-              <div>
-                {item.symbol + item.amount + '.00'}
-              </div>
-                {miniCartAttributesList}
-            </div>
-            <div className="mc-col-quantity">
-              <div className="mc-quantity-switcher">−</div>
-              <div className="mc-quantity">{item.quantity}</div>
-              <div className="mc-quantity-switcher">+</div>
-            </div>
-            <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
-          </div>)
-        });
-      divMiniCart =
-        <div
-          className="mini-cart-container"
-          style={{ top: top + 45, left: left - 350 }}>
-          <div key={'mini-cart-key'} className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
-          {miniCartList}
-          <div className="mc-total">
-            <div>Total</div>
-            <div>{this.state.symbol + miniCartAmount + '.00'}</div>
-          </div>
-          <div className="mc-buttons">
-            <div>view bag</div>
-            <div>check out</div>
-          </div>
-        </div>
-      innerContaner = 'inner-container';
-    }
 
     return (
       <div className='container' onClick={(e) => this.commonClick(e)}>
@@ -168,14 +121,18 @@ class Products extends Component {
           <li className="cart"></li>
           {quantityRound}
         </div>
-        <div className={'product-content ' + innerContaner}>
+        <div className={'product-content ' + this.state.innerContaner}>
           <h2>{this.state.category.substring(0, 1).toUpperCase()}{this.state.category.slice(1)}</h2>
           <div className='product-items'>
             {ProductList}
           </div>
           {currencyList}
         </div>
-        {divMiniCart}
+        <MiniCart
+          state={this.state}
+          miniCartOnClick={this.commonClick}
+          onChangeQuantity={this.addToCart}
+        />
       </div>
     );
   }
