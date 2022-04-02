@@ -69,16 +69,16 @@ class Products extends Component {
     }
   }
 
-  addToCart(id) {
+  addToCart(id, sign = 1) {
     const miniCartArray = this.state.cart;
     let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id)
     if (indexProduct === -1) {
       let product = this.state.products.find(product => product.id === id)
       const { prices } = product;
       const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-      this.state.cart.push({ product: product, quantity: 1, amount, symbol });
+      this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes: [] });
     } else {
-      miniCartArray[indexProduct].quantity = miniCartArray[indexProduct].quantity + 1;
+      miniCartArray[indexProduct].quantity = miniCartArray[indexProduct].quantity + sign;
       this.setState({
         cart: miniCartArray
       });
