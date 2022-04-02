@@ -22,6 +22,7 @@ class Products extends Component {
     this.currencyClick = this.currencyClick.bind(this);
     this.commonClick = this.commonClick.bind(this);
     this.addToCart = this.addToCart.bind(this);
+    this.onChangeAttribute = this.onChangeAttribute.bind(this);
   }
 
   linkClick(category, e) {
@@ -76,9 +77,50 @@ class Products extends Component {
       let product = this.state.products.find(product => product.id === id)
       const { prices } = product;
       const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-      this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes: [] });
+      const attributes = product.attributes.map(item => {
+        let firstIteration = true;
+        const items = item.items.map(item => {
+          const items = { displayValue: item.displayValue, value: item.value, selected: firstIteration };
+          firstIteration = false;
+          return (items);
+        });
+        return (
+          {
+            id: item.id,
+            items: items
+          });
+      });
+      this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes: attributes });
     } else {
-      miniCartArray[indexProduct].quantity = miniCartArray[indexProduct].quantity + sign;
+      const quantity = miniCartArray[indexProduct].quantity + sign;
+      miniCartArray[indexProduct].quantity = quantity;
+      if (quantity === 0) {
+        miniCartArray.splice(indexProduct, 1);
+      }
+      this.setState({
+        cart: miniCartArray
+      });
+    }
+  }
+
+  onChangeAttribute(productId, attributeId, displayValue, value) {
+    const miniCartArray = this.state.cart;
+    const indexProduct = miniCartArray.findIndex(aId => aId.product.id === productId);
+    if (indexProduct !== -1) {
+      miniCartArray[indexProduct].attributes = miniCartArray[indexProduct].attributes.map(attribute => {
+        const items = attribute.items.map(item => {
+          let selected = item.selected;
+          if (attributeId === attribute.id) {
+            selected = item.displayValue === displayValue;
+          }
+          return ({ displayValue: item.displayValue, value: item.value, selected: selected });
+        });
+        return (
+          {
+            id: attribute.id,
+            items: items
+          });
+      });
       this.setState({
         cart: miniCartArray
       });
@@ -132,6 +174,7 @@ class Products extends Component {
           state={this.state}
           miniCartOnClick={this.commonClick}
           onChangeQuantity={this.addToCart}
+          onChangeAttribute={this.onChangeAttribute}
         />
       </div>
     );

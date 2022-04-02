@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import Attribute from "../Attributes/Attribute";
 import './MiniCart.css';
 
 class MiniCart extends Component {
@@ -19,68 +20,23 @@ class MiniCart extends Component {
             for (let item of miniCartArray) {
                 miniCartAmount += item.amount * item.quantity;
             }
-            const miniCartList = miniCartArray.filter(item => item.product.id !== undefined)
+            const miniCartList = miniCartArray
                 .map((item) => {
                     const itemAttributes = item.attributes;
                     const miniCartAttributesList = item.product.attributes.map(attribute => {
-                        let divMiniCartItem = '';
-                        let mcItems = '';
-                        if (attribute.id === "Color") {
-                            let idItemAttribute = itemAttributes.find(id => id === attribute.id);
-                            if (idItemAttribute === undefined) {
-                                idItemAttribute = attribute.items[0];
-                            }
-                            mcItems = attribute.items.map(item => {
-                                let value = '';
-                                if (idItemAttribute.displayValue !== item.displayValue) {
-                                    value = '#A6A6A6 solid 1px';
-                                }
-                                return (
-                                    <div className={"mc-attributes-box"} style={{ background: item.value, border: value }}></div>
-                                )
-                            });
-                        } else {
-                            let capasityStyle = '';
-                            if (attribute.id === "Capacity") {
-                                capasityStyle = 'mc-capasity-style';
-                            }
-                            let idItemAttribute = itemAttributes.find(id => id === attribute.id);
-                            if (idItemAttribute === undefined) {
-                                idItemAttribute = attribute.items[0];
-                            }
-                            const valueConverse = [
-                                { id: "Small", value: "S" },
-                                { id: "Medium", value: "M" },
-                                { id: "Large", value: "L" },
-                                { id: "Extra Large", value: "XL" }
-                            ];
-                            mcItems = attribute.items.map(item => {
-                                let displayValue = item.displayValue;
-                                let disableAttributeValue = 'mc-attributes-box-disable';
-                                if (idItemAttribute.displayValue === item.displayValue) {
-                                    disableAttributeValue = '';
-                                }
-                                const attributeValue = valueConverse.find(val => val.id === item.displayValue);
-                                if (attributeValue !== undefined) {
-                                    displayValue = attributeValue.value;
-                                }
-                                return (
-                                    <div className={"mc-attributes-box " + disableAttributeValue + " " + capasityStyle}>{displayValue}</div>
-                                )
-                            });
-                        }
-                        divMiniCartItem = <>
-                            <div>{attribute.id + ':'}</div>
-                            <div className="mc-col-attributes">{mcItems}</div>
-                        </>;
-                        return (<>{divMiniCartItem}</>);
+                        return <Attribute
+                            onChangeAttribute={this.props.onChangeAttribute}
+                            productId={item.product.id}
+                            attributes={itemAttributes}
+                            attribute={attribute}
+                        />
                     });
                     return (<div key={item.product.id + '-mini-cart'} className="mini-cart-item">
                         <div className="mc-col-name">
                             <div>
                                 {item.product.name}
                             </div>
-                            <div>
+                            <div className="mc-col-name-amount">
                                 {item.symbol + item.amount + '.00'}
                             </div>
                             {miniCartAttributesList}
