@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Grid from '../Grid/Grid.tsx';
 import Product from './Product';
 import MiniCart from '../MiniCart/MiniCart';
+import Cart from "../Cart/Cart";
 import products from './Products.ts';
 
 class Products extends Component {
@@ -12,17 +13,19 @@ class Products extends Component {
       category: 'all',
       currencyIsVisible: false,
       miniCartIsVisible: false,
+      cartIsVisible: false,
       currency: 'USD',
       symbol: '$',
       divOrientation: { top: 0, left: 0 },
       cart: [],
-      innerContaner: ''
+      innerContainer: ''
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
     this.commonClick = this.commonClick.bind(this);
     this.addToCart = this.addToCart.bind(this);
     this.onChangeAttribute = this.onChangeAttribute.bind(this);
+    this.cartVeiwClick = this.cartVeiwClick.bind(this);
   }
 
   linkClick(category, e) {
@@ -52,22 +55,32 @@ class Products extends Component {
   }
 
   commonClick(e) {
-    let parent = document.querySelector('.mini-cart-container');
+    const className = e.target.className;
     let doNotCloseMiniCart = false;
+    let parent = document.querySelector('.mini-cart-container');
+    const cartIsVisible = className === 'open-cart';
     if (parent !== null) {
       doNotCloseMiniCart = parent.contains(e.target);
     }
     if (!doNotCloseMiniCart) {
-      const miniCartIsVisible = (e.target.className === "cart" ||
-        e.target.className === "round") && this.state.cart.length !== 0;
-      const innerContaner = miniCartIsVisible ? 'inner-container' : '';
+      const miniCartIsVisible = (className === "cart" ||
+        className === "round") && this.state.cart.length !== 0;
+      const innerContainer = miniCartIsVisible ? 'inner-container' : '';
       this.setState({
-        currencyIsVisible: e.target.className === "vector",
+        currencyIsVisible: className === "vector",
         miniCartIsVisible: miniCartIsVisible,
-        innerContaner: innerContaner,
+        cartIsVisible: cartIsVisible,
+        innerContainer: innerContainer,
         divOrientation: { top: e.clientY, left: e.clientX }
       });
     }
+  }
+
+  cartVeiwClick() {
+    this.setState({
+      miniCartIsVisible: false,
+      cartIsVisible: true,
+    });
   }
 
   addToCart(id, sign = 1) {
@@ -128,17 +141,27 @@ class Products extends Component {
   }
 
   render() {
-    const ProductList = this.state.products.map((product) => (
+    const {
+      category,
+      innerContainer,
+      currencyIsVisible,
+      cartIsVisible,
+      products,
+      currency,
+      symbol,
+      cart,
+      divOrientation: { top, left }
+    } = this.state;
+    const ProductList = products.map((product) => (
       <Grid key={product.id} column={true} lg={4}>
-        <Product product={product} currency={this.state.currency} onChangeQuantity={this.addToCart} />
+        <Product product={product} currency={currency} onChangeQuantity={this.addToCart} />
       </Grid>
     ));
     const currencyArray = ['$ USD', '€ EUR', '¥ JPY'].map(currency => (
       <div className="currency-item" key={currency} onClick={(e) => this.currencyClick(e)}>{currency}</div>
     ));
     let currencyList = '';
-    const { top, left } = this.state.divOrientation;
-    if (this.state.currencyIsVisible) {
+    if (currencyIsVisible) {
       currencyList =
         <div className="currency-list"
           style={{ top: top + 15, left: left - 20 }}>
@@ -146,8 +169,8 @@ class Products extends Component {
         </div>
     }
     let quantityRound = '';
-    if (this.state.cart.length !== 0) {
-      quantityRound = <li className="round">{this.state.cart.length}</li>
+    if (cart.length !== 0) {
+      quantityRound = <li className="round">{cart.length}</li>
     }
 
     return (
@@ -158,21 +181,27 @@ class Products extends Component {
           <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
           <li></li>
           <li className="image"></li>
-          <li className="symbol">{this.state.symbol}</li>
+          <li className="symbol">{symbol}</li>
           <li className="vector"></li>
           <li className="cart"></li>
           {quantityRound}
         </div>
-        <div className={'product-content ' + this.state.innerContaner}>
-          <h2>{this.state.category.substring(0, 1).toUpperCase()}{this.state.category.slice(1)}</h2>
-          <div className='product-items'>
-            {ProductList}
-          </div>
-          {currencyList}
-        </div>
+        {!cartIsVisible &&
+          (<div className={'product-content ' + innerContainer}>
+            <h2>{category.substring(0, 1).toUpperCase()}{category.slice(1)}</h2>
+            <div className='product-items'>
+              {ProductList}
+            </div>
+            {currencyList}
+          </div>)}
+        <Cart
+          state={this.state}
+          onChangeQuantity={this.addToCart}
+          onChangeAttribute={this.onChangeAttribute}
+        />
         <MiniCart
           state={this.state}
-          miniCartOnClick={this.commonClick}
+          cartVeiwClick={this.cartVeiwClick}
           onChangeQuantity={this.addToCart}
           onChangeAttribute={this.onChangeAttribute}
         />

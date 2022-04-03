@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Attribute from "../Attributes/Attribute";
+import MiniCartAttribute from "../MiniCartAttributes/MiniCartAttribute";
 import './MiniCart.css';
 
 class MiniCart extends Component {
@@ -24,7 +24,7 @@ class MiniCart extends Component {
                 .map((item) => {
                     const itemAttributes = item.attributes;
                     const miniCartAttributesList = item.product.attributes.map(attribute => {
-                        return <Attribute
+                        return <MiniCartAttribute
                             onChangeAttribute={this.props.onChangeAttribute}
                             productId={item.product.id}
                             attributes={itemAttributes}
@@ -42,9 +42,9 @@ class MiniCart extends Component {
                             {miniCartAttributesList}
                         </div>
                         <div className="mc-col-quantity">
-                            <div className="mc-quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
-                            <div className="mc-quantity">{item.quantity}</div>
-                            <div className="mc-quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
+                            <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
+                            <div className="quantity">{item.quantity}</div>
+                            <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
                         </div>
                         <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
                     </div>)
@@ -60,7 +60,7 @@ class MiniCart extends Component {
                         <div>{symbol + miniCartAmount + '.00'}</div>
                     </div>
                     <div className="mc-buttons">
-                        <div>view bag</div>
+                        <div onClick={this.props.cartVeiwClick} className="open-cart">view bag</div>
                         <div>check out</div>
                     </div>
                 </div>

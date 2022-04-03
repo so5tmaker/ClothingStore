@@ -1,6 +1,6 @@
-.cart-quantity-switcher-plus,
-.cart-quantity-switcher-minus,
-.attributes-box {
+.quantity-switcher-plus,
+.quantity-switcher-minus,
+.mc-attributes-box {
   width: 24px;
   height: 24px;
   line-height: 24px;
@@ -9,31 +9,31 @@
   cursor: pointer;
 }
 
-.attributes-box-disable {
+.mc-attributes-box-disable {
   background: #ededed;
   color: #a6a6a6;
   border: #a6a6a6 solid 1px;
 }
 
-.cart-quantity-switcher-plus,
-.cart-quantity-switcher-minus {
+.quantity-switcher-plus,
+.quantity-switcher-minus {
   font-size: 28px;
   font-weight: 200;
   line-height: 20px;
 }
 
-.cart-quantity-switcher-plus {
+.quantity-switcher-plus {
   line-height: 24px;
 }
 
-.attributes-box {
+.mc-attributes-box {
   font-family: "Source Sans Pro";
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
 }
 
-.cart-quantity {
+.quantity {
   height: 87px;
   width: 24px;
   line-height: 87px;
@@ -45,25 +45,51 @@
   height: 100%;
 }
 
-.cart-total {
+.mc-total {
   display: flex;
   font-size: 16px;
   margin: 42px 0px 37px 0px;
   font-weight: bold;
 }
 
-.cart-total div:last-child {
+.mc-total div:last-child {
   width: 282px;
   text-align: right;
 }
 
+.mc-buttons {
+  font-weight: 600;
+  font-size: 14px;
+  display: flex;
+  flex-direction: row;
+  height: 43px;
+}
 
-.cart-col-attributes {
+.mc-buttons div {
+  height: 43px;
+  width: 152px;
+  text-transform: uppercase;
+  line-height: 43px;
+  text-align: center;
+}
+
+.mc-buttons div:first-child {
+  border: #1d1f22 solid 1px;
+  margin-right: 12px;
+  cursor: pointer;
+}
+
+.mc-buttons div:last-child {
+  background-color: #5ece7b;
+  color: white;
+}
+
+.mc-col-attributes {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
 }
 
-.cart-col-attributes div {
+.mc-col-attributes div {
   margin-right: 8px;
 }

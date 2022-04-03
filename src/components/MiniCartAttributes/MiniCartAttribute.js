@@ -1,7 +1,7 @@
 import React, { Component } from "react";
-import './Attribute.css';
+import './MiniCartAttribute.css';
 
-class Attribute extends Component {
+class MiniCartAttribute extends Component {
     constructor(props) {
         super(props);
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
@@ -35,7 +35,7 @@ class Attribute extends Component {
                 }
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
-                        className={"attributes-box"}
+                        className={"mc-attributes-box"}
                         onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue, item.value)}
                         style={{ background: item.value, border: value }}
                     >
@@ -57,7 +57,7 @@ class Attribute extends Component {
             ];
             mcItems = idItemAttribute.map(item => {
                 let displayValue = item.displayValue;
-                let disableAttributeValue = 'attributes-box-disable';
+                let disableAttributeValue = 'mc-attributes-box-disable';
                 if (item.selected) {
                     disableAttributeValue = '';
                 }
@@ -72,7 +72,7 @@ class Attribute extends Component {
                 }
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
-                        className={"attributes-box " + disableAttributeValue}
+                        className={"mc-attributes-box " + disableAttributeValue}
                         onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue)}
                     >
                         {displayValue}
@@ -88,4 +88,4 @@ class Attribute extends Component {
     }
 };
 
-export default Attribute;
+export default MiniCartAttribute;
