@@ -1,29 +1,7 @@
-.quantity-switcher-plus,
-.quantity-switcher-minus,
-.mc-attributes-box {
-  width: 24px;
-  height: 24px;
-  line-height: 24px;
-  border: #1d1f22 solid 1px;
-  text-align: center;
-  cursor: pointer;
-}
-
 .mc-attributes-box-disable {
   background: #ededed;
   color: #a6a6a6;
   border: #a6a6a6 solid 1px;
-}
-
-.quantity-switcher-plus,
-.quantity-switcher-minus {
-  font-size: 28px;
-  font-weight: 200;
-  line-height: 20px;
-}
-
-.quantity-switcher-plus {
-  line-height: 24px;
 }
 
 .mc-attributes-box {

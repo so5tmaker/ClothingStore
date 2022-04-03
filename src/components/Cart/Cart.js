@@ -13,7 +13,7 @@ class Cart extends Component {
     }
 
     render() {
-        const { state: { divOrientation: { top, left }, cart: cartArray, cartIsVisible, symbol } } = this.props;
+        const { state: { cart: cartArray, cartIsVisible, symbol } } = this.props;
         let divCart = '';
         if (cartIsVisible && cartArray.length !== 0) {
             let cartAmount = 0;
@@ -43,7 +43,9 @@ class Cart extends Component {
                             <div className="cart-amount">
                                 {item.symbol + item.amount + '.00'}
                             </div>
-                            {cartAttributesList}
+                            <div className="cart-row-attributes">
+                                {cartAttributesList}
+                            </div>
                         </div>
                         <div className="cart-col-quantity">
                             <div className="cart-quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
@@ -57,10 +59,6 @@ class Cart extends Component {
                 <div className="cart-container">
                     <div key={'cart-key'} className="cart-title">Cart</div>
                     {cartList}
-                    <div className="cart-total">
-                        <div>Total</div>
-                        <div>{symbol + cartAmount + '.00'}</div>
-                    </div>
                 </div>
         }
         return (<>{divCart}</>);

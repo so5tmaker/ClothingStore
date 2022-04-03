@@ -20,7 +20,6 @@ class Attribute extends Component {
         const { productId, attributes, attribute } = this.props;
         let divMiniCartItem = '';
         let mcItems = '';
-        let unitOfMeasurement = '';
         if (attribute.id === "Color") {
             let idItemAttribute = attributes.find(item => item.id === attribute.id);
             if (idItemAttribute === undefined) {
@@ -65,11 +64,6 @@ class Attribute extends Component {
                 if (attributeValue !== undefined) {
                     displayValue = attributeValue.value;
                 }
-                unitOfMeasurement = '';
-                if (attribute.id === "Capacity") {
-                    displayValue = displayValue.substring(0, 3);
-                    unitOfMeasurement = ', GB';
-                }
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
                         className={"attributes-box " + disableAttributeValue}
@@ -80,10 +74,10 @@ class Attribute extends Component {
                 )
             });
         }
-        divMiniCartItem = <>
-            <div key={productId + '-' + attribute.id}>{attribute.id + unitOfMeasurement + ':'}</div>
-            <div className="mc-col-attributes">{mcItems}</div>
-        </>;
+        divMiniCartItem = <div>
+            <div className="attribute-title" key={productId + '-' + attribute.id}>{attribute.id + ':'}</div>
+            <div className="cart-col-attributes">{mcItems}</div>
+        </div>;
         return (<>{divMiniCartItem}</>);
     }
 };
