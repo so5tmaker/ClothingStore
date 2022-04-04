@@ -5,7 +5,8 @@
 
 body {
   margin: 0 auto;
-  width: 1440px;
+  width: 100%;
+  max-width: 1440px;
   font-family: "Raleway", "Roboto", "Source Sans Pro";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -32,7 +33,7 @@ code {
 }
 
 h2 {
-  font-family: "Raleway", Helvetica, Arial, sans-serif;
+  font-family: "Raleway";
   color: #222;
   font-size: 42px;
   font-weight: normal;
@@ -71,13 +72,13 @@ li:nth-child(3) {
 }
 
 .navbar li:nth-child(4) {
-  width: 30%;
+  width: 35%;
 }
 
 .navbar li.image {
   background: url(images/icon.png) no-repeat;
   padding: 20px;
-  width: 35%;
+  width: 41%;
 }
 
 .navbar li.image:hover {

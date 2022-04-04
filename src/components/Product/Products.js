@@ -54,15 +54,21 @@ class Products extends Component {
     });
   }
 
+  getModalVisibility(e, selector) {
+    let parent = document.querySelector(selector);
+    if (parent !== null) {
+      return parent.contains(e.target);
+    }
+    return false;
+  }
+
   commonClick(e) {
     const className = e.target.className;
-    let doNotCloseMiniCart = false;
-    let parent = document.querySelector('.mini-cart-container');
+    const doNotCloseMiniCart = this.getModalVisibility(e, '.mini-cart-container');
+    const doNotCloseCart = this.getModalVisibility(e, '.cart-container');
+    document.querySelector('.cart-container')
     const cartIsVisible = className === 'open-cart';
-    if (parent !== null) {
-      doNotCloseMiniCart = parent.contains(e.target);
-    }
-    if (!doNotCloseMiniCart) {
+    if (!doNotCloseMiniCart && !doNotCloseCart) {
       const miniCartIsVisible = (className === "cart" ||
         className === "round") && this.state.cart.length !== 0;
       const innerContainer = miniCartIsVisible ? 'inner-container' : '';

@@ -1,0 +1,26 @@
+.left-arrow,
+.right-arrow {
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 40px;
+  border: 2px solid #ffffff;
+}
+
+.left-arrow:hover,
+.right-arrow:hover {
+  color: #5ece7b;
+  cursor: pointer;
+  font-size: 40px;
+}
+
+.left-arrow {
+  background: url("../../images/left.svg") no-repeat;
+  margin: -120px 0px -43px 40px;
+}
+
+.right-arrow {
+  background: url("../../images/right.svg") no-repeat;
+  margin: -10px 0px -24px 105px;
+}
