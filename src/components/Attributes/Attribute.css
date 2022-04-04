@@ -1,7 +1,6 @@
 .attributes-box-disable {
-  background: #ededed;
-  color: #a6a6a6;
-  border: #a6a6a6 solid 1px;
+  background: white !important;
+  color: #1d1f22 !important;
 }
 
 .attributes-box {
@@ -10,6 +9,8 @@
   font-weight: 400;
   font-size: 16px;
   letter-spacing: 0.05em;
+  color: white;
+  background: #1d1f22;
 }
 
 .mc-col-image img {
@@ -29,7 +30,6 @@
   text-align: right;
 }
 
-
 .cart-col-attributes {
   display: flex;
   flex-direction: row;
@@ -40,12 +40,16 @@
   margin-right: 12px;
 }
 
-.attribute-title{
-  font-weight: 400;
-  font-size: 16px;
+.attribute-title {
+  font-family: "Roboto Condensed";
+  font-style: normal;
+  font-weight: 700;
+  font-size: 18px;
+  line-height: 18px;
   letter-spacing: -0.05em;
-  text-align: center;
+  text-align: left;
   margin-right: 12px;
+  text-transform: uppercase;
 }
 
 .attributes-box {

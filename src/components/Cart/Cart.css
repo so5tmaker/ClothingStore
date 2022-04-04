@@ -40,7 +40,7 @@
 .cart-col-name {
   display: flex;
   flex-direction: column;
-  width: 900px;
+  width: 63%;
   font-weight: 300;
   font-size: 16px;
 }

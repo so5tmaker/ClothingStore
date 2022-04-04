@@ -28,6 +28,17 @@ class Products extends Component {
     this.cartVeiwClick = this.cartVeiwClick.bind(this);
   }
 
+  componentDidMount() {
+    const localStorageRef = localStorage.getItem('cart');
+    if (localStorageRef) {
+      this.setState({ cart: JSON.parse(localStorageRef) });
+    }
+  }
+
+  componentDidUpdate(){
+    localStorage.setItem('cart', JSON.stringify(this.state.cart));
+  }
+
   linkClick(category, e) {
     e.preventDefault();
     let filter = products;

@@ -51,7 +51,6 @@ class Cart extends Component {
                         </div>
                         <div className="cart-image">
                             <ImageSlider slides={item.product.gallery} />
-                            {/* <img src={item.product.gallery[0]} alt={item.product.name} /> */}
                         </div>
                     </div>)
                 });
