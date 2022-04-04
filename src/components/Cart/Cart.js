@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Attribute from "../Attributes/Attribute";
+import ImageSlider from '../ImageSlider/ImageSlider';
 import './Cart.css';
 
 class Cart extends Component {
@@ -13,13 +14,9 @@ class Cart extends Component {
     }
 
     render() {
-        const { state: { cart: cartArray, cartIsVisible, symbol } } = this.props;
+        const { state: { cart: cartArray, cartIsVisible } } = this.props;
         let divCart = '';
         if (cartIsVisible && cartArray.length !== 0) {
-            let cartAmount = 0;
-            for (let item of cartArray) {
-                cartAmount += item.amount * item.quantity;
-            }
             const cartList = cartArray
                 .map((item) => {
                     const itemAttributes = item.attributes;
@@ -52,7 +49,10 @@ class Cart extends Component {
                             <div className="cart-quantity">{item.quantity}</div>
                             <div className="cart-quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
                         </div>
-                        <div className="cart-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
+                        <div className="cart-image">
+                            <ImageSlider slides={item.product.gallery} />
+                            {/* <img src={item.product.gallery[0]} alt={item.product.name} /> */}
+                        </div>
                     </div>)
                 });
             divCart =
