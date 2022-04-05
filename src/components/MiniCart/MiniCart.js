@@ -13,7 +13,19 @@ class MiniCart extends Component {
     }
 
     render() {
-        const { state: { divOrientation: { top, left }, cart: miniCartArray, miniCartIsVisible, symbol } } = this.props;
+        const {
+            state:
+            {
+                divOrientation:
+                {
+                    top,
+                    left
+                },
+                cart: miniCartArray,
+                miniCartIsVisible,
+                symbol
+            }
+        } = this.props;
         let divMiniCart = '';
         if (miniCartIsVisible && miniCartArray.length !== 0) {
             let miniCartAmount = 0;
@@ -25,13 +37,14 @@ class MiniCart extends Component {
                     const itemAttributes = item.attributes;
                     const miniCartAttributesList = item.product.attributes.map(attribute => {
                         return <MiniCartAttribute
+                            key={item.product.id + '-' + attribute.id + '-mini-cart-attribute'}
                             onChangeAttribute={this.props.onChangeAttribute}
                             productId={item.product.id}
                             attributes={itemAttributes}
                             attribute={attribute}
                         />
                     });
-                    return (<div key={item.product.id + '-mini-cart'} className="mini-cart-item">
+                    return (<div key={item.product.id + '-' + item.product.name + '-mini-cart'} className="mini-cart-item">
                         <div className="mc-col-name">
                             <div>
                                 {item.product.name}

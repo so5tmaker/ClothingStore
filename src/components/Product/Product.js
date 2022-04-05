@@ -14,8 +14,7 @@ class Product extends Component {
   render() {
     const { product, currency: label } = this.props;
     const { gallery, name, prices, inStock, id } = product;
-    const { amount, currency } = prices.filter(record => record.currency.label === label)[0];
-    const { symbol } = currency;
+    const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === label)[0];
     let divOutOfStock = '';
     let imgOutOfStock = '';
     let divButtonCart = <div className="button-cart" title={id} onClick={this.onChangeQuantity}></div>
@@ -37,7 +36,7 @@ class Product extends Component {
           {name}
         </div>
         <div className={"product-price " + imgOutOfStock}>
-          <strong>{symbol + amount + '.00'}</strong>
+          {symbol + amount + '.00'}
         </div>
       </div>
     );

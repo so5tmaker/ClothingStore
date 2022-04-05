@@ -21,15 +21,14 @@ class Cart extends Component {
                 .map((item) => {
                     const itemAttributes = item.attributes;
                     const cartAttributesList = item.product.attributes.map(attribute => {
-                        return <Attribute 
-                            key={item.product.id + '-' + attribute.id + '-cart-attribute'}
+                        return <Attribute
                             onChangeAttribute={this.props.onChangeAttribute}
                             productId={item.product.id}
                             attributes={itemAttributes}
                             attribute={attribute}
                         />
                     });
-                    return (<div key={item.product.id + '-' + item.product.name + '-cart'} className="cart-item">
+                    return (<div key={item.product.id + '-cart'} className="cart-item">
                         <div className="cart-line"></div>
                         <div className="cart-col-name">
                             <div className="cart-brand">

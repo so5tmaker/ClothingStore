@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Grid from '../Grid/Grid.tsx';
+// import Grid from '../Grid/Grid.tsx';
 import Product from './Product';
 import MiniCart from '../MiniCart/MiniCart';
 import Cart from "../Cart/Cart";
@@ -29,14 +29,25 @@ class Products extends Component {
   }
 
   componentDidMount() {
-    const localStorageRef = localStorage.getItem('cart');
-    if (localStorageRef) {
-      this.setState({ cart: JSON.parse(localStorageRef) });
+    const localStorageCart = localStorage.getItem('cart');
+    const localStorageCurrency = localStorage.getItem('currency');
+    if (localStorageCart) {
+      this.setState({
+        cart: JSON.parse(localStorageCart)
+      });
+    }
+    if (localStorageCurrency) {
+      const { currency, symbol } = JSON.parse(localStorageCurrency);
+      this.setState({
+        currency,
+        symbol
+      });
     }
   }
 
-  componentDidUpdate(){
+  componentDidUpdate() {
     localStorage.setItem('cart', JSON.stringify(this.state.cart));
+    localStorage.setItem('currency', JSON.stringify({ currency: this.state.currency, symbol: this.state.symbol }));
   }
 
   linkClick(category, e) {
@@ -59,10 +70,26 @@ class Products extends Component {
   }
 
   currencyClick(e) {
+    const stateSymbol = this.state.symbol;
+    const targetSymbol = e.target.innerText.substring(0, 1);
     this.setState({
       currency: e.target.innerText.slice(2),
-      symbol: e.target.innerText.substring(0, 1)
+      symbol: targetSymbol
     });
+    if (stateSymbol !== targetSymbol) {
+      const { cart, products } = this.state;
+      for (let item of cart) {
+        const product = products.filter(record => record.id === item.product.id)[0];
+        if (product !== undefined) {
+          const { amount, currency: { symbol } } = product.prices.filter(record => record.currency.symbol === targetSymbol)[0];
+          item.amount = amount;
+          item.symbol = symbol; 
+        }
+      }
+      this.setState({
+        cart: cart
+      });
+    }
   }
 
   getModalVisibility(e, selector) {
@@ -77,8 +104,10 @@ class Products extends Component {
     const className = e.target.className;
     const doNotCloseMiniCart = this.getModalVisibility(e, '.mini-cart-container');
     const doNotCloseCart = this.getModalVisibility(e, '.cart-container');
-    document.querySelector('.cart-container')
-    const cartIsVisible = className === 'open-cart';
+    let cartIsVisible = className === 'open-cart';
+    if (this.state.cartIsVisible && (className === 'vector' || className === 'currency-item')) {
+      cartIsVisible = true;
+    }
     if (!doNotCloseMiniCart && !doNotCloseCart) {
       const miniCartIsVisible = (className === "cart" ||
         className === "round") && this.state.cart.length !== 0;
@@ -170,9 +199,7 @@ class Products extends Component {
       divOrientation: { top, left }
     } = this.state;
     const ProductList = products.map((product) => (
-      <Grid key={product.id} column={true} lg={4}>
-        <Product product={product} currency={currency} onChangeQuantity={this.addToCart} />
-      </Grid>
+      <Product product={product} currency={currency} onChangeQuantity={this.addToCart} />
     ));
     const currencyArray = ['$ USD', '€ EUR', '¥ JPY'].map(currency => (
       <div className="currency-item" key={currency} onClick={(e) => this.currencyClick(e)}>{currency}</div>
@@ -209,7 +236,6 @@ class Products extends Component {
             <div className='product-items'>
               {ProductList}
             </div>
-            {currencyList}
           </div>)}
         <Cart
           state={this.state}
@@ -222,6 +248,7 @@ class Products extends Component {
           onChangeQuantity={this.addToCart}
           onChangeAttribute={this.onChangeAttribute}
         />
+        {currencyList}
       </div>
     );
   }
