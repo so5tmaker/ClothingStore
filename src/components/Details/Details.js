@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import Attribute from "../Attributes/Attribute";
 import ImageSlider from '../ImageSlider/ImageSlider';
-import './Cart.css';
+import './Details.css';
 
-class Cart extends Component {
+class Details extends Component {
     constructor(props) {
         super(props);
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
@@ -14,9 +14,9 @@ class Cart extends Component {
     }
 
     render() {
-        const { state: { cart: cartArray, cartIsVisible } } = this.props;
+        const { state: { cart: cartArray, detailsIsVisible } } = this.props;
         let divCart = '';
-        if (cartIsVisible && cartArray.length !== 0) {
+        if (detailsIsVisible && cartArray.length !== 0) {
             const cartList = cartArray
                 .map((item) => {
                     const itemAttributes = item.attributes;
@@ -56,7 +56,6 @@ class Cart extends Component {
                 });
             divCart =
                 <div className="cart-container">
-                    <div key={'cart-key'} className="cart-title">Cart</div>
                     {cartList}
                 </div>
         }
@@ -64,4 +63,4 @@ class Cart extends Component {
     }
 };
 
-export default Cart;
+export default Details;

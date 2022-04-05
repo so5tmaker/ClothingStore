@@ -43,7 +43,7 @@
   height: 52px;
   border-radius: 50%;
   line-height: 52px;
-  margin: -10px 0px 0px 303px;
+  margin: -50px 0px 0px 303px;
   background: url(../../images/green-card.png) no-repeat;
 }
 
@@ -58,7 +58,6 @@
 }
 
 .image-out-of-stock {
-  background: #ffffff;
   opacity: 0.5;
   color: #8d8f9a;
   margin-top: -5px;

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-// import Grid from '../Grid/Grid.tsx';
 import Product from './Product';
 import MiniCart from '../MiniCart/MiniCart';
 import Cart from "../Cart/Cart";
+import Details from "../Details/Details";
 import products from './Products.ts';
 
 class Products extends Component {
@@ -14,6 +14,7 @@ class Products extends Component {
       currencyIsVisible: false,
       miniCartIsVisible: false,
       cartIsVisible: false,
+      detailsIsVisible: false,
       currency: 'USD',
       symbol: '$',
       divOrientation: { top: 0, left: 0 },
@@ -26,6 +27,7 @@ class Products extends Component {
     this.addToCart = this.addToCart.bind(this);
     this.onChangeAttribute = this.onChangeAttribute.bind(this);
     this.cartVeiwClick = this.cartVeiwClick.bind(this);
+    this.onOpenDetails = this.onOpenDetails.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +61,7 @@ class Products extends Component {
     this.setState({
       products: filter,
       category: category,
+      detailsIsVisible: false
     });
   }
 
@@ -83,7 +86,7 @@ class Products extends Component {
         if (product !== undefined) {
           const { amount, currency: { symbol } } = product.prices.filter(record => record.currency.symbol === targetSymbol)[0];
           item.amount = amount;
-          item.symbol = symbol; 
+          item.symbol = symbol;
         }
       }
       this.setState({
@@ -122,10 +125,17 @@ class Products extends Component {
     }
   }
 
+  onOpenDetails() {
+    this.setState({
+      detailsIsVisible: true
+    });
+  }
+
   cartVeiwClick() {
     this.setState({
       miniCartIsVisible: false,
       cartIsVisible: true,
+      detailsIsVisible: false
     });
   }
 
@@ -192,6 +202,7 @@ class Products extends Component {
       innerContainer,
       currencyIsVisible,
       cartIsVisible,
+      detailsIsVisible,
       products,
       currency,
       symbol,
@@ -199,7 +210,12 @@ class Products extends Component {
       divOrientation: { top, left }
     } = this.state;
     const ProductList = products.map((product) => (
-      <Product product={product} currency={currency} onChangeQuantity={this.addToCart} />
+      <Product
+        product={product}
+        currency={currency}
+        onChangeQuantity={this.addToCart}
+        onOpenDetails={this.onOpenDetails}
+      />
     ));
     const currencyArray = ['$ USD', '€ EUR', '¥ JPY'].map(currency => (
       <div className="currency-item" key={currency} onClick={(e) => this.currencyClick(e)}>{currency}</div>
@@ -230,14 +246,19 @@ class Products extends Component {
           <li className="cart"></li>
           {quantityRound}
         </div>
-        {!cartIsVisible &&
+        {(!cartIsVisible && !detailsIsVisible) &&
           (<div className={'product-content ' + innerContainer}>
             <h2>{category.substring(0, 1).toUpperCase()}{category.slice(1)}</h2>
-            <div className='product-items'>
+            <div className="product-items">
               {ProductList}
             </div>
           </div>)}
         <Cart
+          state={this.state}
+          onChangeQuantity={this.addToCart}
+          onChangeAttribute={this.onChangeAttribute}
+        />
+        <Details
           state={this.state}
           onChangeQuantity={this.addToCart}
           onChangeAttribute={this.onChangeAttribute}
