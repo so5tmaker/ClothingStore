@@ -19,7 +19,8 @@ class Products extends Component {
       symbol: '$',
       divOrientation: { top: 0, left: 0 },
       cart: [],
-      innerContainer: ''
+      innerContainer: '',
+      productId: ''
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
@@ -28,6 +29,7 @@ class Products extends Component {
     this.onChangeAttribute = this.onChangeAttribute.bind(this);
     this.cartVeiwClick = this.cartVeiwClick.bind(this);
     this.onOpenDetails = this.onOpenDetails.bind(this);
+    this.setSelectedAttributes = this.setSelectedAttributes.bind(this);
   }
 
   componentDidMount() {
@@ -125,10 +127,14 @@ class Products extends Component {
     }
   }
 
-  onOpenDetails() {
-    this.setState({
-      detailsIsVisible: true
-    });
+  onOpenDetails(e, productId) {
+    const className = e.target.className;
+    if (className !== 'button-cart') {
+      this.setState({
+        detailsIsVisible: true,
+        productId
+      });
+    }
   }
 
   cartVeiwClick() {
@@ -139,6 +145,22 @@ class Products extends Component {
     });
   }
 
+  setSelectedAttributes(attributes) {
+    return (attributes.map(item => {
+      let firstIteration = true;
+      const items = item.items.map(item => {
+        const items = { displayValue: item.displayValue, value: item.value, selected: firstIteration };
+        firstIteration = false;
+        return (items);
+      });
+      return (
+        {
+          id: item.id,
+          items: items
+        });
+    }));
+  }
+
   addToCart(id, sign = 1) {
     const miniCartArray = this.state.cart;
     let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id)
@@ -146,19 +168,7 @@ class Products extends Component {
       let product = this.state.products.find(product => product.id === id)
       const { prices } = product;
       const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-      const attributes = product.attributes.map(item => {
-        let firstIteration = true;
-        const items = item.items.map(item => {
-          const items = { displayValue: item.displayValue, value: item.value, selected: firstIteration };
-          firstIteration = false;
-          return (items);
-        });
-        return (
-          {
-            id: item.id,
-            items: items
-          });
-      });
+      const attributes = this.setSelectedAttributes(product.attributes);
       this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes: attributes });
     } else {
       const quantity = miniCartArray[indexProduct].quantity + sign;
@@ -172,7 +182,7 @@ class Products extends Component {
     }
   }
 
-  onChangeAttribute(productId, attributeId, displayValue, value) {
+  onChangeAttribute(productId, attributeId, displayValue) {
     const miniCartArray = this.state.cart;
     const indexProduct = miniCartArray.findIndex(aId => aId.product.id === productId);
     if (indexProduct !== -1) {
@@ -260,9 +270,11 @@ class Products extends Component {
           onChangeAttribute={this.onChangeAttribute}
         />
         <Details
+          key={'detail'}
           state={this.state}
           onChangeQuantity={this.addToCart}
           onChangeAttribute={this.onChangeAttribute}
+          setSelectedAttributes={this.setSelectedAttributes}
         />
         <MiniCart
           state={this.state}
