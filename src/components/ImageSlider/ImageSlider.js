@@ -46,7 +46,7 @@ class ImageSlider extends Component {
                             key={index}
                         >
                             {index === this.state.currentSlide && (
-                                <img src={slide} alt='travel' className='image' />
+                                <img src={slide} alt='webstore' />
                             )}
                         </div>
                     );

@@ -74,8 +74,8 @@ class Attribute extends Component {
                 )
             });
         }
-        divMiniCartItem = <div>
-            <div className="attribute-title" key={productId + '-' + attribute.id}>{attribute.id + ':'}</div>
+        divMiniCartItem = <div key={productId + '-' + attribute.id}>
+            <div className="attribute-title">{attribute.id + ':'}</div>
             <div className="cart-col-attributes">{mcItems}</div>
         </div>;
         return (<>{divMiniCartItem}</>);

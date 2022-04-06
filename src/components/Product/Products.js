@@ -211,6 +211,7 @@ class Products extends Component {
     } = this.state;
     const ProductList = products.map((product) => (
       <Product
+        key={product.id}
         product={product}
         currency={currency}
         onChangeQuantity={this.addToCart}
@@ -230,7 +231,7 @@ class Products extends Component {
     }
     let quantityRound = '';
     if (cart.length !== 0) {
-      quantityRound = <li className="round">{cart.length}</li>
+      quantityRound = <li key={'round'} className="round">{cart.length}</li>
     }
 
     return (
@@ -239,7 +240,7 @@ class Products extends Component {
           <li onClick={e => this.linkClick('all', e)} className={this.isSelected('all')}>All</li>
           <li onClick={e => this.linkClick('tech', e)} className={this.isSelected('tech')}>Tech</li>
           <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
-          <li></li>
+          <li ></li>
           <li className="image"></li>
           <li className="symbol">{symbol}</li>
           <li className="vector"></li>
@@ -248,8 +249,8 @@ class Products extends Component {
         </div>
         {(!cartIsVisible && !detailsIsVisible) &&
           (<div className={'product-content ' + innerContainer}>
-            <h2>{category.substring(0, 1).toUpperCase()}{category.slice(1)}</h2>
-            <div className="product-items">
+            <h2>{`${category.substring(0, 1).toUpperCase() + category.slice(1)}`}</h2>
+            <div className='product-items'>
               {ProductList}
             </div>
           </div>)}
@@ -270,7 +271,7 @@ class Products extends Component {
           onChangeAttribute={this.onChangeAttribute}
         />
         {currencyList}
-      </div>
+      </div >
     );
   }
 };

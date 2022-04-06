@@ -26,7 +26,7 @@ class Product extends Component {
       divButtonCart = '';
     }
     return (
-      <div key={id} className="product-container" onClick={this.props.onOpenDetails}>
+      <div className="product-container" onClick={this.props.onOpenDetails}>
         <div className={"image-container " + imgOutOfStock}>
           <img src={gallery[0]} alt={name} />
         </div>
