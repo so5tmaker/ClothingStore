@@ -12,12 +12,16 @@ class Attribute extends Component {
         this.props.onChangeQuantity(id, sign);
     }
 
-    onChangeAttribute(productId, attributeId, displayValue) {
-        this.props.onChangeAttribute(productId, attributeId, displayValue);
+    onChangeAttribute(productId, attributeId, displayValue, detail = false) {
+        if (detail) {
+            this.props.onChangeDetailAttribute(productId, attributeId, displayValue);
+        } else {
+            this.props.onChangeAttribute(productId, attributeId, displayValue);
+        }
     }
 
     render() {
-        const { productId, attributes, attribute } = this.props;
+        const { productId, attributes, attribute, detail } = this.props;
         let divMiniCartItem = '';
         let mcItems = '';
         if (attribute.id === "Color") {
@@ -67,7 +71,7 @@ class Attribute extends Component {
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
                         className={"attributes-box " + disableAttributeValue}
-                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue)}
+                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue, detail)}
                     >
                         {displayValue}
                     </div>

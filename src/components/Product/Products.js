@@ -3,13 +3,14 @@ import Product from './Product';
 import MiniCart from '../MiniCart/MiniCart';
 import Cart from "../Cart/Cart";
 import Details from "../Details/Details";
-import products from './Products.ts';
+import { client } from '../../index';
+import { LOAD_PRODUCTS } from '../../GraphQL/Queries';
 
 class Products extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      products: products,
+      products: [],
       category: 'all',
       currencyIsVisible: false,
       miniCartIsVisible: false,
@@ -20,7 +21,8 @@ class Products extends Component {
       divOrientation: { top: 0, left: 0 },
       cart: [],
       innerContainer: '',
-      productId: ''
+      productId: '',
+      categories: []
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
@@ -32,7 +34,17 @@ class Products extends Component {
     this.setSelectedAttributes = this.setSelectedAttributes.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount = async () => {
+    if (this.state.categories.length === 0) {
+      const response = await client.query({
+        query: LOAD_PRODUCTS
+      })
+      const { categories } = response.data;
+      this.setState({
+        categories,
+        products: categories[0].products
+      })
+    }
     const localStorageCart = localStorage.getItem('cart');
     const localStorageCurrency = localStorage.getItem('currency');
     if (localStorageCart) {
@@ -56,13 +68,10 @@ class Products extends Component {
 
   linkClick(category, e) {
     e.preventDefault();
-    let filter = products;
-    if (category !== 'all') {
-      filter = products.filter(product => category === product.category);
-    }
+    const { products } = this.state.categories.filter(item => item.name === category)[0];
     this.setState({
-      products: filter,
-      category: category,
+      products,
+      category,
       detailsIsVisible: false
     });
   }
@@ -161,18 +170,24 @@ class Products extends Component {
     }));
   }
 
-  addToCart(id, sign = 1) {
+  addToCart(id, sign = 1, attributes = []) {
     const miniCartArray = this.state.cart;
     let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id)
     if (indexProduct === -1) {
       let product = this.state.products.find(product => product.id === id)
       const { prices } = product;
       const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-      const attributes = this.setSelectedAttributes(product.attributes);
-      this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes: attributes });
+      if (attributes.length === 0) {
+        attributes = this.props.setSelectedAttributes(product.attributes);
+      }
+      this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes });
     } else {
-      const quantity = miniCartArray[indexProduct].quantity + sign;
-      miniCartArray[indexProduct].quantity = quantity;
+      const product = miniCartArray[indexProduct]
+      const quantity = product.quantity + sign;
+      if (attributes.length !== 0) {
+        product.attributes = attributes;
+      }
+      product.quantity = quantity;
       if (quantity === 0) {
         miniCartArray.splice(indexProduct, 1);
       }
@@ -289,25 +304,3 @@ class Products extends Component {
 };
 
 export default Products;
-
-// GraphQL query for Products
-// {
-//     product(id:'apple-imac-2021') {
-//          name
-//       prices{
-//         currency {
-//           label
-//           symbol
-//         }
-//         amount
-//       }
-//       description
-//       attributes{
-//         id
-//         items{
-//           displayValue
-//         }
-//       }
-//       gallery
-//     }
-//   }

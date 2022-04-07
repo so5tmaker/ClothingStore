@@ -6,11 +6,38 @@ import './Details.css';
 class Details extends Component {
     constructor(props) {
         super(props);
+        this.state = { attributes: [] };
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
+        this.onChangeDetailAttribute = this.onChangeDetailAttribute.bind(this);
     }
 
-    onChangeQuantity(id, sign = 1) {
-        this.props.onChangeQuantity(id, sign);
+    onChangeQuantity(id, sign = 1, attributes) {
+        this.props.onChangeQuantity(id, sign, attributes);
+    }
+
+    onChangeDetailAttribute(productId, attributeId, displayValue) {
+        const detail = this.props.state.products.filter((item) => (item.id === productId))[0];
+        let attributes = this.state.attributes;
+        if (attributes.length === 0) {
+            attributes = this.props.setSelectedAttributes(detail.attributes);
+        }
+        attributes = attributes.map(attribute => {
+            const items = attribute.items.map(item => {
+                let selected = item.selected;
+                if (attributeId === attribute.id) {
+                    selected = item.displayValue === displayValue;
+                }
+                return ({ displayValue: item.displayValue, value: item.value, selected: selected });
+            });
+            return (
+                {
+                    id: attribute.id,
+                    items: items
+                });
+        });
+        this.setState({
+            attributes
+        });
     }
 
     render() {
@@ -20,14 +47,18 @@ class Details extends Component {
         if (detailsIsVisible && detail.length !== 0) {
             const detailList = detail
                 .map((item) => {
-                    const itemAttributes = this.props.setSelectedAttributes(item.attributes);
-                    const cartAttributesList = itemAttributes.map(attribute => {
+                    let attributes = this.state.attributes;
+                    if (attributes.length === 0) {
+                        attributes = this.props.setSelectedAttributes(item.attributes);
+                    }
+                    const cartAttributesList = attributes.map(attribute => {
                         return <Attribute
                             key={attribute.id + '-detail-' + item.id}
-                            onChangeAttribute={this.props.onChangeAttribute}
+                            onChangeDetailAttribute={this.onChangeDetailAttribute}
                             productId={item.id}
-                            attributes={itemAttributes}
+                            attributes={attributes}
                             attribute={attribute}
+                            detail={true}
                         />
                     });
                     const price = item.prices.filter(price => price.currency.symbol === symbol)[0].amount;
@@ -35,13 +66,13 @@ class Details extends Component {
                         <img src={image} alt='' />
                     ));
                     return (<div key={item.id + '-detail'} className="details-item">
-                        <div className="image-gallery">
+                        <div key={item.id + '-detail-image'} className="image-gallery">
                             {imageList}
                         </div>
-                        <div className="single-image">
+                        <div key={'single-image'} className="single-image">
                             {<img src={item.gallery[0]} alt='' />}
                         </div>
-                        <div className="details-name">
+                        <div key={'details-name'} className="details-name">
                             <div className="details-brand">
                                 {item.brand}
                             </div>
@@ -55,7 +86,7 @@ class Details extends Component {
                             <div className="detail-amount">
                                 {symbol + price + '.00'}
                             </div>
-                            <div className="detaill-button" onClick={() => this.onChangeQuantity(item.product.id)}>add to cart</div>
+                            <div className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1, attributes)}>add to cart</div>
                             <div className="detail-description">
                                 {parse(item.description)}
                             </div>

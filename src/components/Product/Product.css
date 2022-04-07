@@ -16,6 +16,7 @@
   height: 330px;
   width: 354px;
   margin: 16px 0px 24px 16px;
+  cursor: pointer;
 }
 
 .image-container img {
