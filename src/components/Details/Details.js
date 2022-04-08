@@ -11,8 +11,8 @@ class Details extends Component {
         this.onChangeDetailAttribute = this.onChangeDetailAttribute.bind(this);
     }
 
-    onChangeQuantity(id, sign = 1, attributes) {
-        this.props.onChangeQuantity(id, sign, attributes);
+    onChangeQuantity(id, sign = 1, attributes, hasAttributes) {
+        this.props.onChangeQuantity(id, sign, attributes, hasAttributes);
     }
 
     onChangeDetailAttribute(productId, attributeId, displayValue) {
@@ -48,6 +48,7 @@ class Details extends Component {
             const detailList = detail
                 .map((item) => {
                     let attributes = this.state.attributes;
+                    const hasAttributes = item.attributes !== undefined;
                     if (attributes.length === 0) {
                         attributes = this.props.setSelectedAttributes(item.attributes);
                     }
@@ -84,9 +85,9 @@ class Details extends Component {
                             </div>
                             <div className="detail-title">{'price:'}</div>
                             <div className="detail-amount">
-                                {symbol + price + '.00'}
+                                {symbol + price}
                             </div>
-                            <div className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1, attributes)}>add to cart</div>
+                            <div className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1, attributes, hasAttributes)}>add to cart</div>
                             <div className="detail-description">
                                 {parse(item.description)}
                             </div>

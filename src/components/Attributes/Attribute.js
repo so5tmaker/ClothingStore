@@ -4,12 +4,7 @@ import './Attribute.css';
 class Attribute extends Component {
     constructor(props) {
         super(props);
-        this.onChangeQuantity = this.onChangeQuantity.bind(this);
         this.onChangeAttribute = this.onChangeAttribute.bind(this);
-    }
-
-    onChangeQuantity(id, sign = 1) {
-        this.props.onChangeQuantity(id, sign);
     }
 
     onChangeAttribute(productId, attributeId, displayValue, detail = false) {

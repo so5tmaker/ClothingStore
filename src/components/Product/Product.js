@@ -8,13 +8,14 @@ class Product extends Component {
   }
 
   onChangeQuantity(e) {
-    this.props.onChangeQuantity(e.target.title);
+    this.props.onChangeQuantity(e.target.title, 1, [], hasAttributes);
   }
 
   render() {
     const { product, currency: label } = this.props;
     const { gallery, name, prices, inStock, id } = product;
-    const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === label)[0];
+    const price = prices.filter(record => record.currency.label === label)[0];
+    const { amount, currency: { symbol } } = price;
     let divOutOfStock = '';
     let imgOutOfStock = '';
     let divButtonCart = <div className="button-cart" title={id} onClick={this.onChangeQuantity}></div>
@@ -36,7 +37,7 @@ class Product extends Component {
           {name}
         </div>
         <div className={"product-price " + imgOutOfStock}>
-          {symbol + amount + '.00'}
+          {symbol + amount}
         </div>
       </div>
     );

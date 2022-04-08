@@ -22,7 +22,8 @@ class Products extends Component {
       cart: [],
       innerContainer: '',
       productId: '',
-      categories: []
+      categories: [],
+      currencies: []
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
@@ -39,9 +40,10 @@ class Products extends Component {
       const response = await client.query({
         query: LOAD_PRODUCTS
       })
-      const { categories } = response.data;
+      const { categories, currencies } = response.data;
       this.setState({
         categories,
+        currencies,
         products: categories[0].products
       })
     }
@@ -85,9 +87,10 @@ class Products extends Component {
 
   currencyClick(e) {
     const stateSymbol = this.state.symbol;
-    const targetSymbol = e.target.innerText.substring(0, 1);
+    const currencyArray = e.target.innerText.split(' ');
+    const targetSymbol = currencyArray[1];
     this.setState({
-      currency: e.target.innerText.slice(2),
+      currency: currencyArray[0],
       symbol: targetSymbol
     });
     if (stateSymbol !== targetSymbol) {
@@ -170,14 +173,14 @@ class Products extends Component {
     }));
   }
 
-  addToCart(id, sign = 1, attributes = []) {
+  addToCart(id, sign = 1, attributes = [], hasAttributes = true) {
     const miniCartArray = this.state.cart;
     let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id)
     if (indexProduct === -1) {
       let product = this.state.products.find(product => product.id === id)
       const { prices } = product;
       const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-      if (attributes.length === 0) {
+      if (attributes.length === 0 && hasAttributes) {
         attributes = this.props.setSelectedAttributes(product.attributes);
       }
       this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes });
@@ -232,6 +235,7 @@ class Products extends Component {
       currency,
       symbol,
       cart,
+      currencies,
       divOrientation: { top, left }
     } = this.state;
     const ProductList = products.map((product) => (
@@ -243,9 +247,17 @@ class Products extends Component {
         onOpenDetails={this.onOpenDetails}
       />
     ));
-    const currencyArray = ['$ USD', '€ EUR', '¥ JPY'].map(currency => (
-      <div className="currency-item" key={currency} onClick={(e) => this.currencyClick(e)}>{currency}</div>
-    ));
+    const currencyArray = currencies.map(currency => {
+      const name = currency.label + ' ' + currency.symbol;
+      return (
+        <div
+          key={name}
+          className="currency-item"
+          onClick={(e) => this.currencyClick(e)}
+        >
+          {name}
+        </div >);
+    });
     let currencyList = '';
     if (currencyIsVisible) {
       currencyList =

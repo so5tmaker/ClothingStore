@@ -26,5 +26,9 @@ export const LOAD_PRODUCTS = gql`
       }
       gallery
     }
-    }
+  }
+  currencies {
+    label
+    symbol
+  }
 }`;

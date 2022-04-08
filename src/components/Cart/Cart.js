@@ -21,7 +21,7 @@ class Cart extends Component {
                 .map((item) => {
                     const itemAttributes = item.attributes;
                     const cartAttributesList = item.product.attributes.map(attribute => {
-                        return <Attribute 
+                        return <Attribute
                             key={item.product.id + '-' + attribute.id + '-cart-attribute'}
                             onChangeAttribute={this.props.onChangeAttribute}
                             productId={item.product.id}
@@ -39,7 +39,7 @@ class Cart extends Component {
                                 {item.product.name}
                             </div>
                             <div className="cart-amount">
-                                {item.symbol + item.amount + '.00'}
+                                {item.symbol + item.amount}
                             </div>
                             <div className="cart-row-attributes">
                                 {cartAttributesList}

@@ -8,8 +8,8 @@ class MiniCart extends Component {
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
     }
 
-    onChangeQuantity(id, sign = 1) {
-        this.props.onChangeQuantity(id, sign);
+    onChangeQuantity(id, sign = 1, hasAttributes) {
+        this.props.onChangeQuantity(id, sign, [], hasAttributes);
     }
 
     render() {
@@ -35,6 +35,7 @@ class MiniCart extends Component {
             const miniCartList = miniCartArray
                 .map((item) => {
                     const itemAttributes = item.attributes;
+                    const hasAttributes = itemAttributes !== undefined;
                     const miniCartAttributesList = item.product.attributes.map(attribute => {
                         return <MiniCartAttribute
                             key={item.product.id + '-' + attribute.id + '-mini-cart-attribute'}
@@ -50,14 +51,14 @@ class MiniCart extends Component {
                                 {item.product.name}
                             </div>
                             <div className="mc-col-name-amount">
-                                {item.symbol + item.amount + '.00'}
+                                {item.symbol + item.amount}
                             </div>
                             {miniCartAttributesList}
                         </div>
                         <div className="mc-col-quantity">
-                            <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
+                            <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1, hasAttributes)}>−</div>
                             <div className="quantity">{item.quantity}</div>
-                            <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
+                            <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id, 1, hasAttributes)}>+</div>
                         </div>
                         <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
                     </div>)
@@ -70,7 +71,7 @@ class MiniCart extends Component {
                     {miniCartList}
                     <div className="mc-total">
                         <div>Total</div>
-                        <div>{symbol + miniCartAmount + '.00'}</div>
+                        <div>{symbol + miniCartAmount}</div>
                     </div>
                     <div className="mc-buttons">
                         <div onClick={this.props.cartVeiwClick} className="open-cart">view bag</div>
