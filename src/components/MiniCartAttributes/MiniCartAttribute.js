@@ -31,7 +31,7 @@ class MiniCartAttribute extends Component {
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
                         className={"mc-attributes-box"}
-                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue, item.value)}
+                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue)}
                         style={{ background: item.value, border: value }}
                     >
                     </div>

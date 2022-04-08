@@ -64,8 +64,12 @@ class Products extends Component {
   }
 
   componentDidUpdate() {
-    localStorage.setItem('cart', JSON.stringify(this.state.cart));
-    localStorage.setItem('currency', JSON.stringify({ currency: this.state.currency, symbol: this.state.symbol }));
+    if (this.state.cart.length !== 0) {
+      localStorage.setItem('cart', JSON.stringify(this.state.cart));
+    }
+    if (this.state.symbol !== '$') {
+      localStorage.setItem('currency', JSON.stringify({ currency: this.state.currency, symbol: this.state.symbol }));
+    }
   }
 
   linkClick(category, e) {
@@ -173,17 +177,18 @@ class Products extends Component {
     }));
   }
 
-  addToCart(id, sign = 1, attributes = [], hasAttributes = true) {
+  addToCart(id, sign = 1, attributes = []) {
     const miniCartArray = this.state.cart;
     let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id)
     if (indexProduct === -1) {
       let product = this.state.products.find(product => product.id === id)
       const { prices } = product;
       const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-      if (attributes.length === 0 && hasAttributes) {
-        attributes = this.props.setSelectedAttributes(product.attributes);
+      let productAttributes = this.setSelectedAttributes(product.attributes);
+      if (attributes.length !== 0) {
+        productAttributes = attributes;
       }
-      this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes });
+      this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes: productAttributes });
     } else {
       const product = miniCartArray[indexProduct]
       const quantity = product.quantity + sign;
@@ -243,6 +248,7 @@ class Products extends Component {
         key={product.id}
         product={product}
         currency={currency}
+        innerContainer={innerContainer}
         onChangeQuantity={this.addToCart}
         onOpenDetails={this.onOpenDetails}
       />

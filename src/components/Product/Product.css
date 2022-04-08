@@ -24,6 +24,10 @@
   height: 100%;
 }
 
+.image-opacity {
+  opacity: 0.4;
+}
+
 .product-title,
 .product-price,
 .out-of-stock {

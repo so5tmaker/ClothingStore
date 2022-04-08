@@ -34,7 +34,7 @@ class Attribute extends Component {
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
                         className={"attributes-box"}
-                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue)}
+                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue, detail)}
                         style={{ background: item.value, border: value }}
                     >
                     </div>
