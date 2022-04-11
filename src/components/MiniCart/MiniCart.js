@@ -23,7 +23,9 @@ class MiniCart extends Component {
                 },
                 cart: miniCartArray,
                 miniCartIsVisible,
-                symbol
+                symbol,
+                innerContainer,
+                detailsIsVisible
             }
         } = this.props;
         let divMiniCart = '';
@@ -64,9 +66,13 @@ class MiniCart extends Component {
                         <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
                     </div>)
                 });
+            let border = '';
+            if (innerContainer !== '' && detailsIsVisible) {
+                border = ' details-mc-cart-border';
+            }
             divMiniCart =
                 <div
-                    className="mini-cart-container"
+                    className={"mini-cart-container" + border}
                     style={{ top: top + 45, left: left - 350 }}>
                     <div key={'mini-cart-key'} className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
                     {miniCartList}

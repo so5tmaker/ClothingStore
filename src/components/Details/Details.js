@@ -6,7 +6,6 @@ import './Details.css';
 class Details extends Component {
     constructor(props) {
         super(props);
-        this.state = { attributes: [] };
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
         this.onChangeDetailAttribute = this.onChangeDetailAttribute.bind(this);
     }
@@ -17,7 +16,7 @@ class Details extends Component {
 
     onChangeDetailAttribute(productId, attributeId, displayValue) {
         const detail = this.props.state.products.filter((item) => (item.id === productId))[0];
-        let attributes = this.state.attributes;
+        let attributes = this.props.state.attributes;
         if (attributes.length === 0) {
             attributes = this.props.setSelectedAttributes(detail.attributes);
         }
@@ -35,19 +34,17 @@ class Details extends Component {
                     items: items
                 });
         });
-        this.setState({
-            attributes
-        });
+        this.props.changeAttributes(attributes);
     }
 
     render() {
-        const { state: { products, productId, detailsIsVisible, symbol } } = this.props;
+        const { state: { products, productId, detailsIsVisible, symbol, innerContainer, attributes: propsAttributes } } = this.props;
         const detail = products.filter((item) => (item.id === productId));
         let divDetail = '';
         if (detailsIsVisible && detail.length !== 0) {
             const detailList = detail
                 .map((item) => {
-                    let attributes = this.state.attributes;
+                    let attributes = propsAttributes;
                     if (attributes.length === 0) {
                         attributes = this.props.setSelectedAttributes(item.attributes);
                     }
@@ -94,7 +91,7 @@ class Details extends Component {
                     </div>)
                 });
             divDetail =
-                <div key={detail[0].id + 'detail'} className="detail-container">
+                <div key={detail[0].id + 'detail'} className={"detail-container " + innerContainer} >
                     {detailList}
                 </div>
         }

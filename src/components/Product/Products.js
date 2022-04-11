@@ -23,7 +23,8 @@ class Products extends Component {
       innerContainer: '',
       productId: '',
       categories: [],
-      currencies: []
+      currencies: [],
+      attributes: []
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
@@ -33,6 +34,7 @@ class Products extends Component {
     this.cartVeiwClick = this.cartVeiwClick.bind(this);
     this.onOpenDetails = this.onOpenDetails.bind(this);
     this.setSelectedAttributes = this.setSelectedAttributes.bind(this);
+    this.changeAttributes = this.changeAttributes.bind(this);
   }
 
   componentDidMount = async () => {
@@ -72,13 +74,20 @@ class Products extends Component {
     }
   }
 
+  changeAttributes(attributes = []) {
+    this.setState({
+      attributes
+    });
+  }
+
   linkClick(category, e) {
     e.preventDefault();
     const { products } = this.state.categories.filter(item => item.name === category)[0];
     this.setState({
       products,
       category,
-      detailsIsVisible: false
+      detailsIsVisible: false,
+      attributes: []
     });
   }
 
@@ -308,6 +317,7 @@ class Products extends Component {
           onChangeQuantity={this.addToCart}
           onChangeAttribute={this.onChangeAttribute}
           setSelectedAttributes={this.setSelectedAttributes}
+          changeAttributes={this.changeAttributes}
         />
         <MiniCart
           state={this.state}
