@@ -1,5 +1,4 @@
 import React, { Component, Fragment } from "react";
-import parse from 'html-react-parser';
 import Attribute from "../Attributes/Attribute";
 import './Details.css';
 
@@ -60,7 +59,7 @@ class Details extends Component {
                     });
                     const price = item.prices.filter(price => price.currency.symbol === symbol)[0].amount;
                     const imageList = item.gallery.map(image => (
-                        <img src={image} alt='' />
+                        <img key={'image' + image} src={image} alt='' />
                     ));
                     return (<div key={item.id + '-detail'} className="details-item">
                         <div key={item.id + '-detail-image'} className="image-gallery">
@@ -70,22 +69,22 @@ class Details extends Component {
                             {<img src={item.gallery[0]} alt='' />}
                         </div>
                         <div key={'details-name'} className="details-name">
-                            <div className="details-brand">
+                            <div key={'details-brand'} className="details-brand">
                                 {item.brand}
                             </div>
-                            <div className="detail-name">
+                            <div key={'detail-name'} className="detail-name">
                                 {item.name}
                             </div>
-                            <div className="detail-row-attributes">
+                            <div key={'detail-row-attributes'} className="detail-row-attributes">
                                 {cartAttributesList}
                             </div>
-                            <div className="detail-title">{'price:'}</div>
-                            <div className="detail-amount">
+                            <div key={'detail-title'} className="detail-title">{'price:'}</div>
+                            <div key={'details-amount'} className="detail-amount">
                                 {symbol + price}
                             </div>
-                            <div className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1, attributes)}>add to cart</div>
-                            <div className="detail-description">
-                                {parse(item.description)}
+                            <div key={'details-button'} className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1, attributes)}>add to cart</div>
+                            <div key={'details-description'} className="detail-description">
+                                {item.description}
                             </div>
                         </div>
                     </div>)
