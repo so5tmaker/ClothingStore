@@ -53,6 +53,10 @@
   text-transform: uppercase;
 }
 
+.detail-attribute-title {
+  margin-top: 16px;
+}
+
 .attributes-box {
   width: 63px;
   height: 45px;

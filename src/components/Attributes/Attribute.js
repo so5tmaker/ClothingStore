@@ -73,8 +73,12 @@ class Attribute extends Component {
                 )
             });
         }
+        let detailAttributeTitle = '';
+        if (detail) {
+            detailAttributeTitle = ' detail-attribute-title';
+        }
         divMiniCartItem = <div key={productId + '-' + attribute.id}>
-            <div className="attribute-title">{attribute.id + ':'}</div>
+            <div className={"attribute-title" + detailAttributeTitle}>{attribute.id + ':'}</div>
             <div className="cart-col-attributes">{mcItems}</div>
         </div>;
         return (<>{divMiniCartItem}</>);

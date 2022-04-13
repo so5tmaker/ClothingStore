@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import Attribute from "../Attributes/Attribute";
 import './Details.css';
 
@@ -7,10 +7,18 @@ class Details extends Component {
         super(props);
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
         this.onChangeDetailAttribute = this.onChangeDetailAttribute.bind(this);
+        this.createMarkup = this.createMarkup.bind(this);
+        this.onChangeImage = this.onChangeImage.bind(this);
     }
+
+    createMarkup(discription) { return { __html: discription }; };
 
     onChangeQuantity(id, sign = 1, attributes) {
         this.props.onChangeQuantity(id, sign, attributes);
+    }
+
+    onChangeImage(e) {
+        this.props.onChangeImage(e);
     }
 
     onChangeDetailAttribute(productId, attributeId, displayValue) {
@@ -37,36 +45,36 @@ class Details extends Component {
     }
 
     render() {
-        const { state: { products, productId, detailsIsVisible, symbol, innerContainer, attributes: propsAttributes } } = this.props;
+        const { state: { products, productId, detailsIsVisible, symbol, innerContainer, attributes: propsAttributes, image } } = this.props;
         const detail = products.filter((item) => (item.id === productId));
         let divDetail = '';
         if (detailsIsVisible && detail.length !== 0) {
             const detailList = detail
                 .map((item) => {
-                    let attributes = propsAttributes;
-                    if (attributes.length === 0) {
-                        attributes = this.props.setSelectedAttributes(item.attributes);
+                    let detailAttributes = propsAttributes;
+                    if (detailAttributes.length === 0) {
+                        detailAttributes = this.props.setSelectedAttributes(item.attributes);
                     }
-                    const cartAttributesList = attributes.map(attribute => {
+                    const cartAttributesList = detailAttributes.map(attribute => {
                         return <Attribute
                             key={attribute.id + '-detail-' + item.id}
                             onChangeDetailAttribute={this.onChangeDetailAttribute}
                             productId={item.id}
-                            attributes={attributes}
+                            attributes={detailAttributes}
                             attribute={attribute}
                             detail={true}
                         />
                     });
                     const price = item.prices.filter(price => price.currency.symbol === symbol)[0].amount;
                     const imageList = item.gallery.map(image => (
-                        <img key={'image' + image} src={image} alt='' />
+                        <img onClick={this.onChangeImage} key={'image' + image} src={image} alt='' />
                     ));
                     return (<div key={item.id + '-detail'} className="details-item">
                         <div key={item.id + '-detail-image'} className="image-gallery">
                             {imageList}
                         </div>
                         <div key={'single-image'} className="single-image">
-                            {<img src={item.gallery[0]} alt='' />}
+                            {<img src={image === '' ? item.gallery[0] : image} alt='' />}
                         </div>
                         <div key={'details-name'} className="details-name">
                             <div key={'details-brand'} className="details-brand">
@@ -82,10 +90,10 @@ class Details extends Component {
                             <div key={'details-amount'} className="detail-amount">
                                 {symbol + price}
                             </div>
-                            <div key={'details-button'} className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1, attributes)}>add to cart</div>
-                            <div key={'details-description'} className="detail-description">
-                                {item.description}
-                            </div>
+                            <div key={'details-button'} className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1, detailAttributes)}>add to cart</div>
+                            <div key={'details-description'} className="detail-description"
+                                dangerouslySetInnerHTML={this.createMarkup(item.description)}
+                            />
                         </div>
                     </div>)
                 });
@@ -94,7 +102,7 @@ class Details extends Component {
                     {detailList}
                 </div>
         }
-        return (<Fragment key={'details'}>{divDetail}</Fragment>);
+        return (<>{divDetail}</>);
     }
 };
 

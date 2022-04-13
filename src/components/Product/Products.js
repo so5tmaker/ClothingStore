@@ -24,7 +24,8 @@ class Products extends Component {
       productId: '',
       categories: [],
       currencies: [],
-      attributes: []
+      attributes: [],
+      image: ''
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
@@ -35,6 +36,11 @@ class Products extends Component {
     this.onOpenDetails = this.onOpenDetails.bind(this);
     this.setSelectedAttributes = this.setSelectedAttributes.bind(this);
     this.changeAttributes = this.changeAttributes.bind(this);
+    this.onChangeImage = this.onChangeImage.bind(this);
+  }
+
+  onChangeImage(e) {
+    this.setState({ image: e.target.src });
   }
 
   componentDidMount = async () => {
@@ -81,13 +87,14 @@ class Products extends Component {
   }
 
   linkClick(category, e) {
-    e.preventDefault();
+    e.stopPropagation();
     const { products } = this.state.categories.filter(item => item.name === category)[0];
     this.setState({
       products,
       category,
       detailsIsVisible: false,
-      attributes: []
+      attributes: [],
+      image: ''
     });
   }
 
@@ -162,11 +169,13 @@ class Products extends Component {
     }
   }
 
-  cartVeiwClick() {
+  cartVeiwClick(e) {
+    e.stopPropagation();
     this.setState({
       miniCartIsVisible: false,
       cartIsVisible: true,
-      detailsIsVisible: false
+      detailsIsVisible: false,
+      image: ''
     });
   }
 
@@ -285,48 +294,57 @@ class Products extends Component {
     if (cart.length !== 0) {
       quantityRound = <li key={'round'} className="round">{cart.length}</li>
     }
+    let wrapperBackground = '';
+    if (innerContainer !== '' && !detailsIsVisible && !cartIsVisible) {
+      wrapperBackground = ' wrapper-background';
+    }
 
     return (
-      <div className='container' onClick={(e) => this.commonClick(e)}>
-        <div className='navbar'>
-          <li onClick={e => this.linkClick('all', e)} className={this.isSelected('all')}>All</li>
-          <li onClick={e => this.linkClick('tech', e)} className={this.isSelected('tech')}>Tech</li>
-          <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
-          <li ></li>
-          <li className="image"></li>
-          <li className="symbol">{symbol}</li>
-          <li className="vector"></li>
-          <li className="cart"></li>
-          {quantityRound}
+      <div className={'wrapper' + wrapperBackground} onClick={(e) => this.commonClick(e)}>
+        <div className='container'>
+          <div className='navbar'>
+            <li onClick={e => this.linkClick('all', e)} className={this.isSelected('all')}>All</li>
+            <li onClick={e => this.linkClick('tech', e)} className={this.isSelected('tech')}>Tech</li>
+            <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
+            <li ></li>
+            <li className="image"></li>
+            <li className="symbol">{symbol}</li>
+            <li className="vector"></li>
+            <li className="cart"></li>
+            {quantityRound}
+          </div>
+          {
+            (!cartIsVisible && !detailsIsVisible) &&
+            (<div className={'product-content ' + innerContainer}>
+              <h2>{`${category.substring(0, 1).toUpperCase() + category.slice(1)}`}</h2>
+              <div className='product-items'>
+                {ProductList}
+              </div>
+            </div>)
+          }
+          <Cart
+            state={this.state}
+            onChangeQuantity={this.addToCart}
+            onChangeAttribute={this.onChangeAttribute}
+          />
+          <Details
+            key={'detail'}
+            state={this.state}
+            onChangeQuantity={this.addToCart}
+            onChangeAttribute={this.onChangeAttribute}
+            setSelectedAttributes={this.setSelectedAttributes}
+            changeAttributes={this.changeAttributes}
+            onChangeImage={this.onChangeImage}
+          />
+          <MiniCart
+            state={this.state}
+            cartVeiwClick={this.cartVeiwClick}
+            onChangeQuantity={this.addToCart}
+            onChangeAttribute={this.onChangeAttribute}
+          />
+          {currencyList}
         </div>
-        {(!cartIsVisible && !detailsIsVisible) &&
-          (<div className={'product-content ' + innerContainer}>
-            <h2>{`${category.substring(0, 1).toUpperCase() + category.slice(1)}`}</h2>
-            <div className='product-items'>
-              {ProductList}
-            </div>
-          </div>)}
-        <Cart
-          state={this.state}
-          onChangeQuantity={this.addToCart}
-          onChangeAttribute={this.onChangeAttribute}
-        />
-        <Details
-          key={'detail'}
-          state={this.state}
-          onChangeQuantity={this.addToCart}
-          onChangeAttribute={this.onChangeAttribute}
-          setSelectedAttributes={this.setSelectedAttributes}
-          changeAttributes={this.changeAttributes}
-        />
-        <MiniCart
-          state={this.state}
-          cartVeiwClick={this.cartVeiwClick}
-          onChangeQuantity={this.addToCart}
-          onChangeAttribute={this.onChangeAttribute}
-        />
-        {currencyList}
-      </div >
+      </div>
     );
   }
 };

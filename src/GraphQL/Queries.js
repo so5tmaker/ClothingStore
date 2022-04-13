@@ -7,6 +7,7 @@ export const LOAD_PRODUCTS = gql`
     products {
       id
       name
+      inStock
       brand
       description
       category
