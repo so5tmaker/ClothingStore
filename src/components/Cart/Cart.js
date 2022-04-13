@@ -23,7 +23,6 @@ class Cart extends Component {
                     const cartAttributesList = item.product.attributes.map(attribute => {
                         return <Attribute
                             key={item.product.id + '-' + attribute.id + '-cart-attribute'}
-                            onChangeAttribute={this.props.onChangeAttribute}
                             productId={item.product.id}
                             attributes={itemAttributes}
                             attribute={attribute}

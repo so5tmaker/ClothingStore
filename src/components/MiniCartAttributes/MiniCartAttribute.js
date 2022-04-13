@@ -2,15 +2,6 @@ import React, { Component } from "react";
 import './MiniCartAttribute.css';
 
 class MiniCartAttribute extends Component {
-    constructor(props) {
-        super(props);
-        this.onChangeAttribute = this.onChangeAttribute.bind(this);
-    }
-
-    onChangeAttribute(productId, attributeId, displayValue) {
-        this.props.onChangeAttribute(productId, attributeId, displayValue);
-    }
-
     render() {
         const { productId, attributes, attribute } = this.props;
         let divMiniCartItem = '';
@@ -31,7 +22,6 @@ class MiniCartAttribute extends Component {
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
                         className={"mc-attributes-box"}
-                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue)}
                         style={{ background: item.value, border: value }}
                     >
                     </div>
@@ -68,7 +58,6 @@ class MiniCartAttribute extends Component {
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
                         className={"mc-attributes-box " + disableAttributeValue}
-                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue)}
                     >
                         {displayValue}
                     </div>

@@ -9,7 +9,7 @@ class Attribute extends Component {
 
     onChangeAttribute(productId, attributeId, displayValue, detail = false) {
         if (detail) {
-            this.props.onChangeDetailAttribute(productId, attributeId, displayValue);
+            this.props.onChangeDetailAttribute(attributeId, displayValue);
         } else {
             this.props.onChangeAttribute(productId, attributeId, displayValue);
         }
@@ -19,6 +19,10 @@ class Attribute extends Component {
         const { productId, attributes, attribute, detail } = this.props;
         let divMiniCartItem = '';
         let mcItems = '';
+        let attributeBoxCart = ' attributes-box-cart';
+        if (detail) {
+            attributeBoxCart = '';
+        }
         if (attribute.id === "Color") {
             let idItemAttribute = attributes.find(item => item.id === attribute.id);
             if (idItemAttribute === undefined) {
@@ -33,8 +37,8 @@ class Attribute extends Component {
                 }
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
-                        className={"attributes-box"}
-                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue, detail)}
+                        className={"attributes-box" + attributeBoxCart}
+                        onClick={detail ? () => this.onChangeAttribute(productId, attribute.id, item.displayValue, detail) : ''}
                         style={{ background: item.value, border: value }}
                     >
                     </div>
@@ -55,7 +59,7 @@ class Attribute extends Component {
             ];
             mcItems = idItemAttribute.map(item => {
                 let displayValue = item.displayValue;
-                let disableAttributeValue = 'attributes-box-disable';
+                let disableAttributeValue = ' attributes-box-disable';
                 if (item.selected) {
                     disableAttributeValue = '';
                 }
@@ -65,8 +69,8 @@ class Attribute extends Component {
                 }
                 return (
                     <div key={attribute.id + '-' + item.displayValue}
-                        className={"attributes-box " + disableAttributeValue}
-                        onClick={() => this.onChangeAttribute(productId, attribute.id, item.displayValue, detail)}
+                        className={"attributes-box" + disableAttributeValue + attributeBoxCart}
+                        onClick={detail ? () => this.onChangeAttribute(productId, attribute.id, item.displayValue, detail) : ''}
                     >
                         {displayValue}
                     </div>

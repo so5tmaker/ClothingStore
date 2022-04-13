@@ -4,7 +4,7 @@ import MiniCart from '../MiniCart/MiniCart';
 import Cart from "../Cart/Cart";
 import Details from "../Details/Details";
 import { client } from '../../index';
-import { LOAD_PRODUCTS } from '../../GraphQL/Queries';
+import { LOAD_PRODUCTS, LOAD_ATTRIBUTES } from '../../GraphQL/Queries';
 
 class Products extends Component {
   constructor(props) {
@@ -25,6 +25,7 @@ class Products extends Component {
       categories: [],
       currencies: [],
       attributes: [],
+      dbAttributes: [],
       image: ''
     };
     this.linkClick = this.linkClick.bind(this);
@@ -37,6 +38,7 @@ class Products extends Component {
     this.setSelectedAttributes = this.setSelectedAttributes.bind(this);
     this.changeAttributes = this.changeAttributes.bind(this);
     this.onChangeImage = this.onChangeImage.bind(this);
+    this.getAttributes = this.getAttributes.bind(this);
   }
 
   onChangeImage(e) {
@@ -159,13 +161,28 @@ class Products extends Component {
     }
   }
 
+  async getAttributes(productId) {
+    const response = await client.query({
+      query: LOAD_ATTRIBUTES,
+      variables: { id: productId }
+    });
+    const { product: { attributes } } = response.data;
+    return attributes;
+  }
+
   onOpenDetails(e, productId) {
     const className = e.target.className;
-    if (className !== 'button-cart') {
-      this.setState({
-        detailsIsVisible: true,
-        productId
-      });
+    if (this.state.attributes.length === 0) {
+      this.getAttributes(productId)
+        .then((attributes) => {
+          if (className !== 'button-cart') {
+            this.setState({
+              detailsIsVisible: true,
+              productId,
+              dbAttributes: attributes
+            });
+          }
+        });
     }
   }
 

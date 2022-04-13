@@ -40,7 +40,6 @@ class MiniCart extends Component {
                     const miniCartAttributesList = item.product.attributes.map(attribute => {
                         return <MiniCartAttribute
                             key={item.product.id + '-' + attribute.id + '-mini-cart-attribute'}
-                            onChangeAttribute={this.props.onChangeAttribute}
                             productId={item.product.id}
                             attributes={itemAttributes}
                             attribute={attribute}

@@ -33,3 +33,16 @@ export const LOAD_PRODUCTS = gql`
     symbol
   }
 }`;
+
+export const LOAD_ATTRIBUTES = gql`
+  query($id: String!){
+  product(id:$id){
+    attributes{
+      id 
+      items{
+        displayValue
+          value
+      }
+    }
+  }
+}`;

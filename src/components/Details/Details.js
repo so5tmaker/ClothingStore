@@ -1,10 +1,13 @@
 import React, { Component } from "react";
+// import { client } from '../../index';
+// import { LOAD_ATTRIBUTES } from '../../GraphQL/Queries';
 import Attribute from "../Attributes/Attribute";
 import './Details.css';
 
 class Details extends Component {
     constructor(props) {
         super(props);
+        this.state = { detailAttributes: [] }
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
         this.onChangeDetailAttribute = this.onChangeDetailAttribute.bind(this);
         this.createMarkup = this.createMarkup.bind(this);
@@ -21,11 +24,18 @@ class Details extends Component {
         this.props.onChangeImage(e);
     }
 
-    onChangeDetailAttribute(productId, attributeId, displayValue) {
-        const detail = this.props.state.products.filter((item) => (item.id === productId))[0];
-        let attributes = this.props.state.attributes;
+    onChangeDetailAttribute(attributeId, displayValue) {
+        const {
+            state:
+            {
+                attributes: propsAttributes,
+                dbAttributes,
+
+            }
+        } = this.props;
+        let attributes = propsAttributes;
         if (attributes.length === 0) {
-            attributes = this.props.setSelectedAttributes(detail.attributes);
+            attributes = this.props.setSelectedAttributes(dbAttributes);
         }
         attributes = attributes.map(attribute => {
             const items = attribute.items.map(item => {
@@ -45,16 +55,28 @@ class Details extends Component {
     }
 
     render() {
-        const { state: { products, productId, detailsIsVisible, symbol, innerContainer, attributes: propsAttributes, image } } = this.props;
+        const {
+            state:
+            {
+                products,
+                productId,
+                detailsIsVisible,
+                symbol,
+                innerContainer,
+                attributes: propsAttributes,
+                dbAttributes,
+                image
+            }
+        } = this.props;
         const detail = products.filter((item) => (item.id === productId));
         let divDetail = '';
         if (detailsIsVisible && detail.length !== 0) {
+            let detailAttributes = propsAttributes;
+            if (detailAttributes.length === 0) {
+                detailAttributes = this.props.setSelectedAttributes(dbAttributes);
+            }
             const detailList = detail
                 .map((item) => {
-                    let detailAttributes = propsAttributes;
-                    if (detailAttributes.length === 0) {
-                        detailAttributes = this.props.setSelectedAttributes(item.attributes);
-                    }
                     const cartAttributesList = detailAttributes.map(attribute => {
                         return <Attribute
                             key={attribute.id + '-detail-' + item.id}

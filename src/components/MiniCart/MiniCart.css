@@ -55,6 +55,10 @@
   cursor: pointer;
 }
 
+.mc-attributes-box {
+  cursor: text;
+}
+
 .quantity-switcher-plus,
 .quantity-switcher-minus {
   font-size: 28px;
