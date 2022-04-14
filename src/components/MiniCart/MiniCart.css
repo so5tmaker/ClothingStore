@@ -11,6 +11,12 @@
   color: #1d1f22;
   padding: 15px;
   background: #ffffff;
+  top: 100px;
+}
+
+.mini-cart-container-overflow {
+  max-height: 900px;
+  overflow-y: scroll;
 }
 
 .mini-cart-item {
@@ -32,12 +38,6 @@
 
 .mc-col-name div:first-child {
   margin-bottom: 5px;
-}
-
-.mc-col-image {
-  height: 137px;
-  width: 137px;
-  margin-left: 10px;
 }
 
 .mc-col-name .mc-col-name-amount {

@@ -7,13 +7,16 @@ class MiniCartAttribute extends Component {
         let divMiniCartItem = '';
         let mcItems = '';
         let unitOfMeasurement = '';
+        if (attributes.length === 0) {
+            return ('');
+        }
+        let idItemAttribute = attributes.find(item => item.id === attribute.id);
+        if (idItemAttribute === undefined) {
+            idItemAttribute = attributes[0].items;
+        } else {
+            idItemAttribute = idItemAttribute.items;
+        }
         if (attribute.id === "Color") {
-            let idItemAttribute = attributes.find(item => item.id === attribute.id);
-            if (idItemAttribute === undefined) {
-                idItemAttribute = attributes[0].items;
-            } else {
-                idItemAttribute = idItemAttribute.items;
-            }
             mcItems = idItemAttribute.map(item => {
                 let value = '';
                 if (!item.selected) {
@@ -28,12 +31,6 @@ class MiniCartAttribute extends Component {
                 )
             });
         } else {
-            let idItemAttribute = attributes.find(item => item.id === attribute.id);
-            if (idItemAttribute === undefined) {
-                idItemAttribute = attributes[0].items;
-            } else {
-                idItemAttribute = idItemAttribute.items;
-            }
             const valueConverse = [
                 { id: "Small", value: "S" },
                 { id: "Medium", value: "M" },

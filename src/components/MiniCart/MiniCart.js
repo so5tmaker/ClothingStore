@@ -18,7 +18,6 @@ class MiniCart extends Component {
             {
                 divOrientation:
                 {
-                    top,
                     left
                 },
                 cart: miniCartArray,
@@ -58,9 +57,9 @@ class MiniCart extends Component {
                             {miniCartAttributesList}
                         </div>
                         <div className="mc-col-quantity">
-                            <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
-                            <div className="quantity">{item.quantity}</div>
                             <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
+                            <div className="quantity">{item.quantity}</div>
+                            <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
                         </div>
                         <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
                     </div>)
@@ -69,10 +68,14 @@ class MiniCart extends Component {
             if (innerContainer !== '' && detailsIsVisible) {
                 border = ' details-mc-cart-border';
             }
+            let miniCartContainerOverflow = '';
+            if (miniCartArray.length > 3) {
+                miniCartContainerOverflow = ' mini-cart-container-overflow';
+            }
             divMiniCart =
                 <div
-                    className={"mini-cart-container" + border}
-                    style={{ top: top + 45, left: left - 350 }}>
+                    className={"mini-cart-container" + border + miniCartContainerOverflow}
+                    style={{ left: left - 350 }}>
                     <div key={'mini-cart-key'} className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
                     {miniCartList}
                     <div className="mc-total">

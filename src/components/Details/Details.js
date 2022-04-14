@@ -1,6 +1,4 @@
 import React, { Component } from "react";
-// import { client } from '../../index';
-// import { LOAD_ATTRIBUTES } from '../../GraphQL/Queries';
 import Attribute from "../Attributes/Attribute";
 import './Details.css';
 
@@ -16,8 +14,8 @@ class Details extends Component {
 
     createMarkup(discription) { return { __html: discription }; };
 
-    onChangeQuantity(id, sign = 1, attributes) {
-        this.props.onChangeQuantity(id, sign, attributes);
+    onChangeQuantity(id, sign = 1) {
+        this.props.onChangeQuantity(id, sign, true);
     }
 
     onChangeImage(e) {
@@ -112,7 +110,7 @@ class Details extends Component {
                             <div key={'details-amount'} className="detail-amount">
                                 {symbol + price}
                             </div>
-                            <div key={'details-button'} className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1, detailAttributes)}>add to cart</div>
+                            <div key={'details-button'} className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1)}>add to cart</div>
                             <div key={'details-description'} className="detail-description"
                                 dangerouslySetInnerHTML={this.createMarkup(item.description)}
                             />

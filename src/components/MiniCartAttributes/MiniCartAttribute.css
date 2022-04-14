@@ -19,11 +19,6 @@
   text-align: center;
 }
 
-.mc-col-image img {
-  width: 100%;
-  height: 100%;
-}
-
 .mc-total {
   display: flex;
   font-size: 16px;

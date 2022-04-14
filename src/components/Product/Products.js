@@ -39,6 +39,7 @@ class Products extends Component {
     this.changeAttributes = this.changeAttributes.bind(this);
     this.onChangeImage = this.onChangeImage.bind(this);
     this.getAttributes = this.getAttributes.bind(this);
+    this.setAttributes = this.setAttributes.bind(this);
   }
 
   onChangeImage(e) {
@@ -170,19 +171,25 @@ class Products extends Component {
     return attributes;
   }
 
+  setAttributes(productId) {
+    this.getAttributes(productId)
+      .then((attributes) => {
+        this.setState({
+          productId,
+          dbAttributes: attributes
+        });
+      });
+  }
+
   onOpenDetails(e, productId) {
     const className = e.target.className;
     if (this.state.attributes.length === 0) {
-      this.getAttributes(productId)
-        .then((attributes) => {
-          if (className !== 'button-cart') {
-            this.setState({
-              detailsIsVisible: true,
-              productId,
-              dbAttributes: attributes
-            });
-          }
-        });
+      this.setAttributes(productId);
+    }
+    if (className !== 'button-cart') {
+      this.setState({
+        detailsIsVisible: true
+      });
     }
   }
 
@@ -196,7 +203,10 @@ class Products extends Component {
     });
   }
 
-  setSelectedAttributes(attributes) {
+  setSelectedAttributes(attributes, id = '') {
+    if (attributes.length === 0 && id !== '') {
+      attributes = this.setAttributes(id);
+    }
     return (attributes.map(item => {
       let firstIteration = true;
       const items = item.items.map(item => {
@@ -212,31 +222,57 @@ class Products extends Component {
     }));
   }
 
-  addToCart(id, sign = 1, attributes = []) {
-    const miniCartArray = this.state.cart;
-    let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id)
+  addToCart(id, sign = 1, detail = false) {
+    const { cart: miniCartArray, attributes, dbAttributes } = this.state;
+    let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id);
+    let productAttributes = attributes;
+    if (attributes.length === 0) {
+      productAttributes = this.setSelectedAttributes(dbAttributes, id);
+    }
     if (indexProduct === -1) {
       let product = this.state.products.find(product => product.id === id)
       const { prices } = product;
       const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-      let productAttributes = this.setSelectedAttributes(product.attributes);
-      if (attributes.length !== 0) {
-        productAttributes = attributes;
-      }
       this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes: productAttributes });
     } else {
-      const product = miniCartArray[indexProduct]
+      const product = miniCartArray[indexProduct];
+      const miniCartAttributes = product.attributes;
       const quantity = product.quantity + sign;
-      if (attributes.length !== 0) {
-        product.attributes = attributes;
+      let addNewItem = false;
+      for (const mcAttribute of miniCartAttributes) {
+        for (const item of mcAttribute.items) {
+          for (const newAttribute of productAttributes) {
+            if (newAttribute.id === mcAttribute.id) {
+              for (const newItem of newAttribute.items) {
+                if (newAttribute.displayValue === mcAttribute.displayValue) {
+                  if (newItem.selected !== item.selected) {
+                    addNewItem = true;
+                  }
+                }
+              }
+            }
+          }
+        }
       }
-      product.quantity = quantity;
-      if (quantity === 0) {
-        miniCartArray.splice(indexProduct, 1);
+      if (addNewItem && detail) {
+        const { prices } = product.product;
+        const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
+        this.state.cart.push({ product: product.product, quantity: sign, amount, symbol, attributes: productAttributes });
+      } else {
+        if (attributes.length !== 0) {
+          product.attributes = attributes;
+        }
+        product.quantity = quantity;
+        if (quantity === 0) {
+          miniCartArray.splice(indexProduct, 1);
+        }
+        this.setState({
+          cart: miniCartArray
+        });
+        if (miniCartArray.length === 0) {
+          localStorage.setItem('cart', JSON.stringify(miniCartArray));
+        }
       }
-      this.setState({
-        cart: miniCartArray
-      });
     }
   }
 
