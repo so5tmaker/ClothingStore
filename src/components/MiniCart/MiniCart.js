@@ -45,24 +45,33 @@ class MiniCart extends Component {
                         />
                     });
                     const top = item.product.name.length > 17 ? '0' : '25';
-                    return (<div key={item.product.id + '-' + item.product.name + '-mini-cart'} className="mini-cart-item">
-                        <div className="mc-col-name">
-                            <div>
-                                {item.product.name}
+                    let attributeText = '';
+                    for (const attribute of item.attributes) {
+                        const oneItem = attribute.items.filter(item => (item.selected));
+                        attributeText += '-' + oneItem[0].value;
+                    }
+                    return (
+                        <div
+                            key={item.product.id + attributeText}
+                            className="mini-cart-item"
+                        >
+                            <div className="mc-col-name">
+                                <div>
+                                    {item.product.name}
+                                </div>
+                                <div className="mc-col-name-amount"
+                                    style={{ marginTop: top + 'px' }}>
+                                    {item.symbol + item.amount}
+                                </div>
+                                {miniCartAttributesList}
                             </div>
-                            <div className="mc-col-name-amount"
-                                style={{ marginTop: top + 'px' }}>
-                                {item.symbol + item.amount}
+                            <div className="mc-col-quantity">
+                                <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
+                                <div className="quantity">{item.quantity}</div>
+                                <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
                             </div>
-                            {miniCartAttributesList}
-                        </div>
-                        <div className="mc-col-quantity">
-                            <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
-                            <div className="quantity">{item.quantity}</div>
-                            <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
-                        </div>
-                        <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
-                    </div>)
+                            <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
+                        </div>)
                 });
             let border = '';
             if (innerContainer !== '' && detailsIsVisible) {
@@ -88,7 +97,7 @@ class MiniCart extends Component {
                     </div>
                 </div>
         }
-        return (<>{divMiniCart}</>);
+        return (<> {divMiniCart}</>);
     }
 };
 

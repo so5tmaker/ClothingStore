@@ -39,7 +39,10 @@ class Products extends Component {
     this.changeAttributes = this.changeAttributes.bind(this);
     this.onChangeImage = this.onChangeImage.bind(this);
     this.getAttributes = this.getAttributes.bind(this);
-    this.setAttributes = this.setAttributes.bind(this);
+    this.addNewItemInCart = this.addNewItemInCart.bind(this);
+    this.isEqualAttributes = this.isEqualAttributes.bind(this);
+    this.addItemWithAttributes = this.addItemWithAttributes.bind(this);
+    this.getSelectedItems = this.getSelectedItems.bind(this);
   }
 
   onChangeImage(e) {
@@ -89,8 +92,7 @@ class Products extends Component {
     });
   }
 
-  linkClick(category, e) {
-    e.stopPropagation();
+  linkClick(category) {
     const { products } = this.state.categories.filter(item => item.name === category)[0];
     this.setState({
       products,
@@ -171,26 +173,17 @@ class Products extends Component {
     return attributes;
   }
 
-  setAttributes(productId) {
-    this.getAttributes(productId)
-      .then((attributes) => {
-        this.setState({
-          productId,
-          dbAttributes: attributes
-        });
-      });
-  }
-
-  onOpenDetails(e, productId) {
+  async onOpenDetails(e, productId) {
     const className = e.target.className;
-    if (this.state.attributes.length === 0) {
-      this.setAttributes(productId);
+    let attributes = this.state.attributes;
+    if (attributes.length === 0) {
+      attributes = await this.getAttributes(productId);
     }
-    if (className !== 'button-cart') {
-      this.setState({
-        detailsIsVisible: true
-      });
-    }
+    this.setState({
+      productId,
+      detailsIsVisible: className !== 'button-cart',
+      dbAttributes: attributes
+    });
   }
 
   cartVeiwClick(e) {
@@ -203,10 +196,7 @@ class Products extends Component {
     });
   }
 
-  setSelectedAttributes(attributes, id = '') {
-    if (attributes.length === 0 && id !== '') {
-      attributes = this.setAttributes(id);
-    }
+  setSelectedAttributes(attributes) {
     return (attributes.map(item => {
       let firstIteration = true;
       const items = item.items.map(item => {
@@ -222,56 +212,100 @@ class Products extends Component {
     }));
   }
 
-  addToCart(id, sign = 1, detail = false) {
-    const { cart: miniCartArray, attributes, dbAttributes } = this.state;
-    let indexProduct = miniCartArray.findIndex(aId => aId.product.id === id);
-    let productAttributes = attributes;
+  addNewItemInCart(product, attributes) {
+    const { prices } = product;
+    const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
+    const cart = this.state.cart;
+    cart.push({ product, quantity: 1, amount, symbol, attributes });
+    this.setState({
+      cart
+    });
+  }
+
+  addItemWithAttributes(product, attributes) {
     if (attributes.length === 0) {
-      productAttributes = this.setSelectedAttributes(dbAttributes, id);
+      this.getAttributes(product.id)
+        .then((responseAttributes) => {
+          const productAttributes = this.setSelectedAttributes(responseAttributes);
+          this.addNewItemInCart(product, productAttributes);
+        });
+      return;
     }
-    if (indexProduct === -1) {
-      let product = this.state.products.find(product => product.id === id)
-      const { prices } = product;
-      const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-      this.state.cart.push({ product: product, quantity: sign, amount, symbol, attributes: productAttributes });
+    this.addNewItemInCart(product, attributes);
+  }
+
+  async isEqualAttributes(miniCartAttributes, productAttributes, id) {
+    if (miniCartAttributes.length === 0) {
+      return false;
+    }
+    if (productAttributes.length === 0) {
+      productAttributes = await this.getAttributes(id);
+      productAttributes = this.setSelectedAttributes(productAttributes);
+    }
+    const mcAttributes = this.getSelectedItems(miniCartAttributes);
+    const prAttributes = this.getSelectedItems(productAttributes);
+    const ids = productAttributes.map(item => (item.id));
+    for (const id of ids) {
+      const msValue = mcAttributes.filter(item => (item.id === id))[0];
+      const prValue = prAttributes.filter(item => (item.id === id))[0];
+      if (msValue.value !== prValue.value) {
+        return false;
+      }
+    }
+    // for (const mcAttribute of miniCartAttributes) {
+    //   for (const item of mcAttribute.items) {
+    //     for (const newAttribute of productAttributes) {
+    //       if (newAttribute.id === mcAttribute.id) {
+    //         for (const newItem of newAttribute.items) {
+    //           if (newAttribute.displayValue === mcAttribute.displayValue) {
+    //             if (newItem.selected !== item.selected) {
+    //               return true;
+    //             }
+    //           }
+    //         }
+    //       }
+    //     }
+    //   }
+    // }
+    return true;
+  }
+
+  getSelectedItems(attributes) {
+    let attributesArray = [];
+    for (const attribute of attributes) {
+      const oneItem = attribute.items.filter(item => (item.selected))[0];
+      attributesArray.push({ id: attribute.id, value: oneItem.value });
+    }
+    return attributesArray;
+  }
+
+  async addToCart(id, sign = 1) {
+    const { cart: miniCartArray, attributes } = this.state;
+    let products = miniCartArray.filter(aId => aId.product.id === id);
+    if (products.length === 0) {
+      const product = this.state.products.find(product => product.id === id);
+      this.addItemWithAttributes(product, attributes);
     } else {
-      const product = miniCartArray[indexProduct];
+      const product = miniCartArray[0];
       const miniCartAttributes = product.attributes;
       const quantity = product.quantity + sign;
-      let addNewItem = false;
-      for (const mcAttribute of miniCartAttributes) {
-        for (const item of mcAttribute.items) {
-          for (const newAttribute of productAttributes) {
-            if (newAttribute.id === mcAttribute.id) {
-              for (const newItem of newAttribute.items) {
-                if (newAttribute.displayValue === mcAttribute.displayValue) {
-                  if (newItem.selected !== item.selected) {
-                    addNewItem = true;
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-      if (addNewItem && detail) {
-        const { prices } = product.product;
-        const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
-        this.state.cart.push({ product: product.product, quantity: sign, amount, symbol, attributes: productAttributes });
+      const addNewItem = !await this.isEqualAttributes(miniCartAttributes, attributes, product.product.id);
+      if (addNewItem) {
+        this.addItemWithAttributes(product.product, attributes);
       } else {
         if (attributes.length !== 0) {
           product.attributes = attributes;
         }
         product.quantity = quantity;
-        if (quantity === 0) {
-          miniCartArray.splice(indexProduct, 1);
-        }
+        // if (quantity === 0) {
+        //   miniCartArray.splice(indexProduct, 1);
+        // }
         this.setState({
           cart: miniCartArray
         });
-        if (miniCartArray.length === 0) {
-          localStorage.setItem('cart', JSON.stringify(miniCartArray));
-        }
+        // if (miniCartArray.length === 0) {
+        //   localStorage.setItem('cart', JSON.stringify(miniCartArray));
+        // }
       }
     }
   }
@@ -356,9 +390,9 @@ class Products extends Component {
       <div className={'wrapper' + wrapperBackground} onClick={(e) => this.commonClick(e)}>
         <div className='container'>
           <div className='navbar'>
-            <li onClick={e => this.linkClick('all', e)} className={this.isSelected('all')}>All</li>
-            <li onClick={e => this.linkClick('tech', e)} className={this.isSelected('tech')}>Tech</li>
-            <li onClick={e => this.linkClick('clothes', e)} className={this.isSelected('clothes')}>Clothes</li>
+            <li onClick={e => this.linkClick('all')} className={this.isSelected('all')}>All</li>
+            <li onClick={e => this.linkClick('tech')} className={this.isSelected('tech')}>Tech</li>
+            <li onClick={e => this.linkClick('clothes')} className={this.isSelected('clothes')}>Clothes</li>
             <li ></li>
             <li className="image"></li>
             <li className="symbol">{symbol}</li>

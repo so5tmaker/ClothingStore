@@ -7,7 +7,7 @@ class Attribute extends Component {
         this.onChangeAttribute = this.onChangeAttribute.bind(this);
     }
 
-    onChangeAttribute(productId, attributeId, displayValue, detail = false) {
+    onChangeAttribute(productId, attributeId, displayValue, detail) {
         if (detail) {
             this.props.onChangeDetailAttribute(attributeId, displayValue);
         } else {
