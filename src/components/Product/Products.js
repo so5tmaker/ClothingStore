@@ -4,7 +4,7 @@ import MiniCart from '../MiniCart/MiniCart';
 import Cart from "../Cart/Cart";
 import Details from "../Details/Details";
 import { client } from '../../index';
-import { LOAD_PRODUCTS, LOAD_ATTRIBUTES } from '../../GraphQL/Queries';
+import { LOAD_PRODUCTS, LOAD_ATTRIBUTES, LOAD_PRODUCT } from '../../GraphQL/Queries';
 
 class Products extends Component {
   constructor(props) {
@@ -41,8 +41,9 @@ class Products extends Component {
     this.getAttributes = this.getAttributes.bind(this);
     this.addNewItemInCart = this.addNewItemInCart.bind(this);
     this.isEqualAttributes = this.isEqualAttributes.bind(this);
-    this.addItemWithAttributes = this.addItemWithAttributes.bind(this);
     this.getSelectedItems = this.getSelectedItems.bind(this);
+    this.getItemAtributesId = this.getItemAtributesId.bind(this);
+    this.getProduct = this.getProduct.bind(this);
   }
 
   onChangeImage(e) {
@@ -173,6 +174,15 @@ class Products extends Component {
     return attributes;
   }
 
+  async getProduct(productId) {
+    const response = await client.query({
+      query: LOAD_PRODUCT,
+      variables: { id: productId }
+    });
+    const { product } = response.data;
+    return product;
+  }
+
   async onOpenDetails(e, productId) {
     const className = e.target.className;
     let attributes = this.state.attributes;
@@ -212,26 +222,14 @@ class Products extends Component {
     }));
   }
 
-  addNewItemInCart(product, attributes) {
+  addNewItemInCart(product, attributes, mcId) {
     const { prices } = product;
     const { amount, currency: { symbol } } = prices.filter(record => record.currency.label === this.state.currency)[0];
     const cart = this.state.cart;
-    cart.push({ product, quantity: 1, amount, symbol, attributes });
+    cart.push({ product, mcId, quantity: 1, amount, symbol, attributes });
     this.setState({
       cart
     });
-  }
-
-  addItemWithAttributes(product, attributes) {
-    if (attributes.length === 0) {
-      this.getAttributes(product.id)
-        .then((responseAttributes) => {
-          const productAttributes = this.setSelectedAttributes(responseAttributes);
-          this.addNewItemInCart(product, productAttributes);
-        });
-      return;
-    }
-    this.addNewItemInCart(product, attributes);
   }
 
   async isEqualAttributes(miniCartAttributes, productAttributes, id) {
@@ -279,34 +277,48 @@ class Products extends Component {
     return attributesArray;
   }
 
+  getItemAtributesId(attributes) {
+    let attributeText = '';
+    for (const attribute of attributes) {
+      const oneItem = attribute.items.filter(item => (item.selected));
+      attributeText += '-' + oneItem[0].value;
+    }
+    return attributeText;
+  }
+
   async addToCart(id, sign = 1) {
     const { cart: miniCartArray, attributes } = this.state;
-    let products = miniCartArray.filter(aId => aId.product.id === id);
-    if (products.length === 0) {
-      const product = this.state.products.find(product => product.id === id);
-      this.addItemWithAttributes(product, attributes);
+    const product = await this.getProduct(id);
+    let productAttributes = attributes;
+    if (attributes.length === 0) {
+      productAttributes = this.setSelectedAttributes(product.attributes);;
+    }
+    const mcId = id + this.getItemAtributesId(productAttributes);
+    const indexProduct = miniCartArray.findIndex(aId => aId.mcId === mcId);
+    if (indexProduct === -1) {
+      this.addNewItemInCart(product, productAttributes, mcId);
     } else {
-      const product = miniCartArray[0];
-      const miniCartAttributes = product.attributes;
-      const quantity = product.quantity + sign;
-      const addNewItem = !await this.isEqualAttributes(miniCartAttributes, attributes, product.product.id);
-      if (addNewItem) {
-        this.addItemWithAttributes(product.product, attributes);
-      } else {
-        if (attributes.length !== 0) {
-          product.attributes = attributes;
-        }
-        product.quantity = quantity;
-        // if (quantity === 0) {
-        //   miniCartArray.splice(indexProduct, 1);
-        // }
-        this.setState({
-          cart: miniCartArray
-        });
-        // if (miniCartArray.length === 0) {
-        //   localStorage.setItem('cart', JSON.stringify(miniCartArray));
-        // }
+      const mcProduct = miniCartArray[indexProduct];
+      // const miniCartAttributes = product.attributes;
+      const quantity = mcProduct.quantity + sign;
+      // const addNewItem = !await this.isEqualAttributes(miniCartAttributes, attributes, product.product.id);
+      // if (addNewItem) {
+      // this.addItemWithAttributes(product.product, attributes);
+      // } else {
+      if (attributes.length !== 0) {
+        mcProduct.attributes = attributes;
       }
+      mcProduct.quantity = quantity;
+      if (quantity === 0) {
+        miniCartArray.splice(indexProduct, 1);
+      }
+      this.setState({
+        cart: miniCartArray
+      });
+      // if (miniCartArray.length === 0) {
+      //   localStorage.setItem('cart', JSON.stringify(miniCartArray));
+      // }
+      // }
     }
   }
 

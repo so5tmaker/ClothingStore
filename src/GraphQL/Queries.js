@@ -46,3 +46,30 @@ export const LOAD_ATTRIBUTES = gql`
     }
   }
 }`;
+
+export const LOAD_PRODUCT = gql`
+query($id: String!) {
+  product(id:$id) {
+    id
+      name
+      inStock
+      brand
+      description
+      category
+      prices {
+        amount
+        currency {
+          label
+          symbol
+        }
+      }
+      attributes {
+        id
+        items {
+          displayValue
+          value
+        }
+      }
+      gallery
+  }
+}`
