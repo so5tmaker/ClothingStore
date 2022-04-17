@@ -8,8 +8,8 @@ class MiniCart extends Component {
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
     }
 
-    onChangeQuantity(id, sign = 1) {
-        this.props.onChangeQuantity(id, sign);
+    onChangeQuantity(id, sign = 1, mcId) {
+        this.props.onChangeQuantity(id, sign, mcId);
     }
 
     render() {
@@ -45,14 +45,10 @@ class MiniCart extends Component {
                         />
                     });
                     const top = item.product.name.length > 17 ? '0' : '25';
-                    let attributeText = '';
-                    for (const attribute of item.attributes) {
-                        const oneItem = attribute.items.filter(item => (item.selected));
-                        attributeText += '-' + oneItem[0].value;
-                    }
+                    const mcId = item.product.id + this.props.getItemAtributesId(item.attributes);
                     return (
                         <div
-                            key={item.product.id + attributeText}
+                            key={mcId}
                             className="mini-cart-item"
                         >
                             <div className="mc-col-name">
@@ -66,9 +62,9 @@ class MiniCart extends Component {
                                 {miniCartAttributesList}
                             </div>
                             <div className="mc-col-quantity">
-                                <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
+                                <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id, 1, mcId)}>+</div>
                                 <div className="quantity">{item.quantity}</div>
-                                <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
+                                <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1, mcId)}>−</div>
                             </div>
                             <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
                         </div>)

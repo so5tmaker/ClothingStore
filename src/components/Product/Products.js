@@ -40,7 +40,6 @@ class Products extends Component {
     this.onChangeImage = this.onChangeImage.bind(this);
     this.getAttributes = this.getAttributes.bind(this);
     this.addNewItemInCart = this.addNewItemInCart.bind(this);
-    this.isEqualAttributes = this.isEqualAttributes.bind(this);
     this.getSelectedItems = this.getSelectedItems.bind(this);
     this.getItemAtributesId = this.getItemAtributesId.bind(this);
     this.getProduct = this.getProduct.bind(this);
@@ -232,42 +231,6 @@ class Products extends Component {
     });
   }
 
-  async isEqualAttributes(miniCartAttributes, productAttributes, id) {
-    if (miniCartAttributes.length === 0) {
-      return false;
-    }
-    if (productAttributes.length === 0) {
-      productAttributes = await this.getAttributes(id);
-      productAttributes = this.setSelectedAttributes(productAttributes);
-    }
-    const mcAttributes = this.getSelectedItems(miniCartAttributes);
-    const prAttributes = this.getSelectedItems(productAttributes);
-    const ids = productAttributes.map(item => (item.id));
-    for (const id of ids) {
-      const msValue = mcAttributes.filter(item => (item.id === id))[0];
-      const prValue = prAttributes.filter(item => (item.id === id))[0];
-      if (msValue.value !== prValue.value) {
-        return false;
-      }
-    }
-    // for (const mcAttribute of miniCartAttributes) {
-    //   for (const item of mcAttribute.items) {
-    //     for (const newAttribute of productAttributes) {
-    //       if (newAttribute.id === mcAttribute.id) {
-    //         for (const newItem of newAttribute.items) {
-    //           if (newAttribute.displayValue === mcAttribute.displayValue) {
-    //             if (newItem.selected !== item.selected) {
-    //               return true;
-    //             }
-    //           }
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-    return true;
-  }
-
   getSelectedItems(attributes) {
     let attributesArray = [];
     for (const attribute of attributes) {
@@ -286,25 +249,22 @@ class Products extends Component {
     return attributeText;
   }
 
-  async addToCart(id, sign = 1) {
+  async addToCart(id, sign = 1, mcId = '') {
     const { cart: miniCartArray, attributes } = this.state;
     const product = await this.getProduct(id);
     let productAttributes = attributes;
     if (attributes.length === 0) {
       productAttributes = this.setSelectedAttributes(product.attributes);;
     }
-    const mcId = id + this.getItemAtributesId(productAttributes);
+    if (mcId === '') {
+      mcId = id + this.getItemAtributesId(productAttributes);
+    }
     const indexProduct = miniCartArray.findIndex(aId => aId.mcId === mcId);
     if (indexProduct === -1) {
       this.addNewItemInCart(product, productAttributes, mcId);
     } else {
       const mcProduct = miniCartArray[indexProduct];
-      // const miniCartAttributes = product.attributes;
       const quantity = mcProduct.quantity + sign;
-      // const addNewItem = !await this.isEqualAttributes(miniCartAttributes, attributes, product.product.id);
-      // if (addNewItem) {
-      // this.addItemWithAttributes(product.product, attributes);
-      // } else {
       if (attributes.length !== 0) {
         mcProduct.attributes = attributes;
       }
@@ -315,10 +275,9 @@ class Products extends Component {
       this.setState({
         cart: miniCartArray
       });
-      // if (miniCartArray.length === 0) {
-      //   localStorage.setItem('cart', JSON.stringify(miniCartArray));
-      // }
-      // }
+      if (miniCartArray.length === 0) {
+        localStorage.setItem('cart', JSON.stringify(miniCartArray));
+      }
     }
   }
 
@@ -440,6 +399,7 @@ class Products extends Component {
             cartVeiwClick={this.cartVeiwClick}
             onChangeQuantity={this.addToCart}
             onChangeAttribute={this.onChangeAttribute}
+            getItemAtributesId={this.getItemAtributesId}
           />
           {currencyList}
         </div>

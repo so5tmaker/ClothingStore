@@ -15,7 +15,7 @@ class Details extends Component {
     createMarkup(discription) { return { __html: discription }; };
 
     onChangeQuantity(id, sign = 1) {
-        this.props.onChangeQuantity(id, sign, true);
+        this.props.onChangeQuantity(id, sign);
     }
 
     onChangeImage(e) {

@@ -8,7 +8,7 @@ class Product extends Component {
   }
 
   onChangeQuantity(e) {
-    this.props.onChangeQuantity(e.target.title, 1, true);
+    this.props.onChangeQuantity(e.target.title, 1);
   }
 
   render() {
