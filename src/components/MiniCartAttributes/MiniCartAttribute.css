@@ -1,17 +1,3 @@
-.mc-attributes-box-disable {
-  background: #ededed;
-  color: #a6a6a6;
-  border: #a6a6a6 solid 1px;
-}
-
-.mc-attributes-box {
-  font-family: "Source Sans Pro";
-  font-style: normal;
-  font-weight: 400;
-  font-size: 14px;
-  margin-top: 6px;
-}
-
 .quantity {
   height: 87px;
   width: 24px;

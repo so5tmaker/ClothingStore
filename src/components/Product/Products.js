@@ -265,9 +265,6 @@ class Products extends Component {
     } else {
       const mcProduct = miniCartArray[indexProduct];
       const quantity = mcProduct.quantity + sign;
-      if (attributes.length !== 0) {
-        mcProduct.attributes = attributes;
-      }
       mcProduct.quantity = quantity;
       if (quantity === 0) {
         miniCartArray.splice(indexProduct, 1);

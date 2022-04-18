@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { MiniCartAttributesBox } from './MiniCartAttribute.styled';
 import './MiniCartAttribute.css';
 
 class MiniCartAttribute extends Component {
@@ -18,16 +19,12 @@ class MiniCartAttribute extends Component {
         }
         if (attribute.id === "Color") {
             mcItems = idItemAttribute.map(item => {
-                let value = '';
-                if (!item.selected) {
-                    value = '#A6A6A6 solid 1px';
-                }
                 return (
-                    <div key={attribute.id + '-' + item.displayValue}
-                        className={"mc-attributes-box"}
-                        style={{ background: item.value, border: value }}
-                    >
-                    </div>
+                    <MiniCartAttributesBox
+                        key={attribute.id + '-' + item.displayValue}
+                        selected={item.selected}
+                        background={item.value}
+                    />
                 )
             });
         } else {
@@ -39,10 +36,6 @@ class MiniCartAttribute extends Component {
             ];
             mcItems = idItemAttribute.map(item => {
                 let displayValue = item.displayValue;
-                let disableAttributeValue = 'mc-attributes-box-disable';
-                if (item.selected) {
-                    disableAttributeValue = '';
-                }
                 const attributeValue = valueConverse.find(val => val.id === item.displayValue);
                 if (attributeValue !== undefined) {
                     displayValue = attributeValue.value;
@@ -53,11 +46,11 @@ class MiniCartAttribute extends Component {
                     unitOfMeasurement = ', GB';
                 }
                 return (
-                    <div key={attribute.id + '-' + item.displayValue}
-                        className={"mc-attributes-box " + disableAttributeValue}
-                    >
-                        {displayValue}
-                    </div>
+                    <MiniCartAttributesBox
+                        key={attribute.id + '-' + item.displayValue}
+                        selected={item.selected}
+                        background={item.selected ? 'white' : '#ededed'}
+                    >{displayValue}</MiniCartAttributesBox>
                 )
             });
         }
