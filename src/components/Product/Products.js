@@ -45,6 +45,8 @@ class Products extends Component {
     this.getItemAtributesId = this.getItemAtributesId.bind(this);
     this.getProduct = this.getProduct.bind(this);
     this.onMiniCartClick = this.onMiniCartClick.bind(this);
+    this.onCurrencyListClick = this.onCurrencyListClick.bind(this);
+
   }
 
   onChangeImage(e) {
@@ -146,19 +148,16 @@ class Products extends Component {
 
   commonClick(e) {
     const className = e.target.className;
-    const doNotCloseMiniCart = this.getModalVisibility(e, '.mini-cart-container');
     const doNotCloseCart = this.getModalVisibility(e, '.cart-container');
     let cartIsVisible = className === 'open-cart';
     if (this.state.cartIsVisible && (className === 'vector' || className === 'currency-item')) {
       cartIsVisible = true;
     }
-    if (!doNotCloseMiniCart && !doNotCloseCart) {
+    if (!doNotCloseCart) {
       const miniCartIsVisible = (className === "cart" ||
         className === "round") && this.state.cart.length !== 0;
       const innerContainer = miniCartIsVisible ? 'inner-container' : '';
       this.setState({
-        currencyIsVisible: className === "vector",
-        miniCartIsVisible: miniCartIsVisible,
         cartIsVisible: cartIsVisible,
         innerContainer: innerContainer,
         divOrientation: { top: e.clientY, left: e.clientX }
@@ -171,9 +170,19 @@ class Products extends Component {
     const miniCartIsVisible = this.state.cart.length !== 0;
     const innerContainer = miniCartIsVisible ? 'inner-container' : '';
     this.setState({
+      currencyIsVisible: false,
       miniCartIsVisible: miniCartIsVisible,
       innerContainer: innerContainer,
       divOrientation: { left: e.clientX }
+    });
+  }
+
+  onCurrencyListClick(e) {
+    e.stopPropagation();
+    this.setState({
+      currencyIsVisible: true,
+      miniCartIsVisible: false,
+      divOrientation: { top: e.clientY, left: e.clientX }
     });
   }
 
@@ -358,7 +367,7 @@ class Products extends Component {
             <li ></li>
             <li className="image"></li>
             <li className="symbol">{symbol}</li>
-            <li className="vector"></li>
+            <li className="vector" onClick={this.onCurrencyListClick}></li>
             <li className="cart" onClick={this.onMiniCartClick}></li>
             {quantityRound}
           </div>

@@ -73,7 +73,7 @@ class MiniCart extends Component {
                 <MiniCartContainer
                     border={innerContainer !== '' && detailsIsVisible}
                     overflow={miniCartArray.length > 3}
-                    left={left - 350 + 'px'}
+                    left={left - 350}
                 >
                     <div key={'mini-cart-key'} className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
                     {miniCartList}

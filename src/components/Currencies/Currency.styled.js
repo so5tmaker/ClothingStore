@@ -18,8 +18,8 @@ const StyledCurrrencyList = styled.div`
   box-shadow: 0px 0px 30px rgba(223, 220, 220, 0.5);
   padding: 15px;
   background: #ffffff;
-  top:${({ top }) => top};
-  left:${({ left }) => left};
+  top:${({ top }) => top}px;
+  left:${({ left }) => left}px;
 `;
 
 export const CurrrencyItem = styled.div`

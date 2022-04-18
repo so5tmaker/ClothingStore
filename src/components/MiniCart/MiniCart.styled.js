@@ -15,10 +15,10 @@ const StyledContainer = styled.div`
   padding: 15px;
   background: #ffffff;
   top: 100px;
-  max-height: ${({ overflow }) => (overflow ? '900px' : 'unset')};;
+  max-height: ${({ overflow }) => (overflow ? '900px' : 'unset')};
   overflow-y: ${({ overflow }) => (overflow ? 'scroll' : 'unset')};
   box-shadow: ${({ border }) => (border ? '0px 0px 30px rgba(223, 220, 220, 0.5)' : 'none')};
-  left:${({ left }) => left};
+  left: ${({ left }) => left}px;
 `;
 
 export const MiniCartContainer = (props) => {
