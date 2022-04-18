@@ -143,32 +143,3 @@ li.round {
   font-size: 14px;
   margin: -8px 0px 0px -15px;
 }
-
-.currency-list {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  position: absolute;
-  right: 800px;
-  top: 70px;
-  width: fit-content;
-  font-family: "Raleway";
-  font-style: normal;
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 160%;
-  color: #1d1f22;
-  box-shadow: 0px 0px 30px rgba(223, 220, 220, 0.5);
-  padding: 15px;
-  background: #ffffff;
-}
-
-.currency-item {
-  margin: 0px 0px;
-  padding: 10px;
-}
-
-.currency-item:hover {
-  background-color: #5ece7b;
-  cursor: pointer;
-}

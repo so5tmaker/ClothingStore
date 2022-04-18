@@ -3,6 +3,7 @@ import Product from './Product';
 import MiniCart from '../MiniCart/MiniCart';
 import Cart from "../Cart/Cart";
 import Details from "../Details/Details";
+import Currency from "../Currencies/Currency";
 import { client } from '../../index';
 import { LOAD_PRODUCTS, LOAD_ATTRIBUTES, LOAD_PRODUCT } from '../../GraphQL/Queries';
 
@@ -43,6 +44,7 @@ class Products extends Component {
     this.getSelectedItems = this.getSelectedItems.bind(this);
     this.getItemAtributesId = this.getItemAtributesId.bind(this);
     this.getProduct = this.getProduct.bind(this);
+    this.onMiniCartClick = this.onMiniCartClick.bind(this);
   }
 
   onChangeImage(e) {
@@ -162,6 +164,17 @@ class Products extends Component {
         divOrientation: { top: e.clientY, left: e.clientX }
       });
     }
+  }
+
+  onMiniCartClick(e) {
+    e.stopPropagation();
+    const miniCartIsVisible = this.state.cart.length !== 0;
+    const innerContainer = miniCartIsVisible ? 'inner-container' : '';
+    this.setState({
+      miniCartIsVisible: miniCartIsVisible,
+      innerContainer: innerContainer,
+      divOrientation: { left: e.clientX }
+    });
   }
 
   async getAttributes(productId) {
@@ -326,28 +339,9 @@ class Products extends Component {
         onOpenDetails={this.onOpenDetails}
       />
     ));
-    const currencyArray = currencies.map(currency => {
-      const name = currency.label + ' ' + currency.symbol;
-      return (
-        <div
-          key={name}
-          className="currency-item"
-          onClick={(e) => this.currencyClick(e)}
-        >
-          {name}
-        </div >);
-    });
-    let currencyList = '';
-    if (currencyIsVisible) {
-      currencyList =
-        <div className="currency-list"
-          style={{ top: top + 15, left: left - 20 }}>
-          {currencyArray}
-        </div>
-    }
     let quantityRound = '';
     if (cart.length !== 0) {
-      quantityRound = <li key={'round'} className="round">{cart.length}</li>
+      quantityRound = <li key={'round'} onClick={this.onMiniCartClick} className="round">{cart.length}</li>
     }
     let wrapperBackground = '';
     if (innerContainer !== '' && !detailsIsVisible && !cartIsVisible) {
@@ -365,7 +359,7 @@ class Products extends Component {
             <li className="image"></li>
             <li className="symbol">{symbol}</li>
             <li className="vector"></li>
-            <li className="cart"></li>
+            <li className="cart" onClick={this.onMiniCartClick}></li>
             {quantityRound}
           </div>
           {
@@ -398,7 +392,13 @@ class Products extends Component {
             onChangeAttribute={this.onChangeAttribute}
             getItemAtributesId={this.getItemAtributesId}
           />
-          {currencyList}
+          <Currency
+            top={top + 15}
+            left={left - 20}
+            currencies={currencies}
+            currencyIsVisible={currencyIsVisible}
+            currencyClick={this.currencyClick}
+          />
         </div>
       </div>
     );

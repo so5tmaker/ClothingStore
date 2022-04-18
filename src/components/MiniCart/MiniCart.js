@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import MiniCartAttribute from "../MiniCartAttributes/MiniCartAttribute";
+import { MiniCartContainer, MiniCartAmount } from "./MiniCart.styled";
 import './MiniCart.css';
 
 class MiniCart extends Component {
@@ -55,10 +56,9 @@ class MiniCart extends Component {
                                 <div>
                                     {item.product.name}
                                 </div>
-                                <div className="mc-col-name-amount"
-                                    style={{ marginTop: top + 'px' }}>
+                                <MiniCartAmount marginTop={top + 'px'}>
                                     {item.symbol + item.amount}
-                                </div>
+                                </MiniCartAmount>
                                 {miniCartAttributesList}
                             </div>
                             <div className="mc-col-quantity">
@@ -69,18 +69,12 @@ class MiniCart extends Component {
                             <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
                         </div>)
                 });
-            let border = '';
-            if (innerContainer !== '' && detailsIsVisible) {
-                border = ' details-mc-cart-border';
-            }
-            let miniCartContainerOverflow = '';
-            if (miniCartArray.length > 3) {
-                miniCartContainerOverflow = ' mini-cart-container-overflow';
-            }
             divMiniCart =
-                <div
-                    className={"mini-cart-container" + border + miniCartContainerOverflow}
-                    style={{ left: left - 350 }}>
+                <MiniCartContainer
+                    border={innerContainer !== '' && detailsIsVisible}
+                    overflow={miniCartArray.length > 3}
+                    left={left - 350 + 'px'}
+                >
                     <div key={'mini-cart-key'} className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>
                     {miniCartList}
                     <div className="mc-total">
@@ -91,7 +85,7 @@ class MiniCart extends Component {
                         <div onClick={this.props.cartVeiwClick} className="open-cart">view bag</div>
                         <div>check out</div>
                     </div>
-                </div>
+                </MiniCartContainer>
         }
         return (<> {divMiniCart}</>);
     }
