@@ -1,9 +1,11 @@
 import { gql } from '@apollo/client';
 
-export const LOAD_PRODUCTS = gql`
-  query {
+export const LOAD_ALL = gql`
+query($CategoryInput: CategoryInput){
   categories {
     name
+  }
+  category(input:$CategoryInput){
     products {
       id
       name
@@ -37,11 +39,12 @@ export const LOAD_PRODUCTS = gql`
 export const LOAD_ATTRIBUTES = gql`
   query($id: String!){
   product(id:$id){
+    id
     attributes{
       id 
       items{
         displayValue
-          value
+        value
       }
     }
   }

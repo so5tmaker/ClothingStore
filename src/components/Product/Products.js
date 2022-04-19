@@ -5,7 +5,7 @@ import Cart from "../Cart/Cart";
 import Details from "../Details/Details";
 import Currency from "../Currencies/Currency";
 import { client } from '../../index';
-import { LOAD_PRODUCTS, LOAD_ATTRIBUTES, LOAD_PRODUCT, LOAD_CATEGORY } from '../../GraphQL/Queries';
+import { LOAD_ALL, LOAD_ATTRIBUTES, LOAD_PRODUCT, LOAD_CATEGORY } from '../../GraphQL/Queries';
 
 class Products extends Component {
   constructor(props) {
@@ -27,7 +27,8 @@ class Products extends Component {
       currencies: [],
       attributes: [],
       dbAttributes: [],
-      image: ''
+      image: '',
+      detail: []
     };
     this.linkClick = this.linkClick.bind(this);
     this.currencyClick = this.currencyClick.bind(this);
@@ -56,13 +57,14 @@ class Products extends Component {
   componentDidMount = async () => {
     if (this.state.categories.length === 0) {
       const response = await client.query({
-        query: LOAD_PRODUCTS
+        query: LOAD_ALL,
+        variables: { CategoryInput: { title: 'all' } }
       })
-      const { categories, currencies } = response.data;
+      const { categories, category: { products }, currencies } = response.data;
       this.setState({
         categories,
         currencies,
-        products: categories[0].products
+        products
       })
     }
     const localStorageCart = localStorage.getItem('cart');
@@ -99,16 +101,15 @@ class Products extends Component {
   async linkClick(title) {
     const response = await client.query({
       query: LOAD_CATEGORY,
-      variables: { input: { title: title } }
+      variables: { CategoryInput: { title } }
     })
-    const { category } = response.data;
-    const { products } = category;
+    const { category: { products } } = response.data;
     this.setState({
       products,
       category: title,
-      categories: category,
       detailsIsVisible: false,
       attributes: [],
+      dbAttributes: [],
       image: ''
     });
   }
@@ -194,14 +195,13 @@ class Products extends Component {
 
   async onOpenDetails(e, productId) {
     const className = e.target.className;
-    let attributes = this.state.attributes;
-    if (attributes.length === 0) {
-      attributes = await this.getAttributes(productId);
-    }
+    const newAttributes = await this.getAttributes(productId);
     this.setState({
       productId,
       detailsIsVisible: className !== 'button-cart',
-      dbAttributes: attributes
+      dbAttributes: newAttributes,
+      attributes: this.setSelectedAttributes(newAttributes),
+      detail: [await this.getProduct(productId)]
     });
   }
 
@@ -211,7 +211,9 @@ class Products extends Component {
       miniCartIsVisible: false,
       cartIsVisible: true,
       detailsIsVisible: false,
-      image: ''
+      image: '',
+      attributes: [],
+      dbAttributes: []
     });
   }
 
@@ -280,12 +282,15 @@ class Products extends Component {
       if (quantity === 0) {
         miniCartArray.splice(indexProduct, 1);
       }
-      this.setState({
-        cart: miniCartArray
-      });
+      let innerContainer = 'inner-container';
       if (miniCartArray.length === 0) {
         localStorage.setItem('cart', JSON.stringify(miniCartArray));
+        innerContainer = '';
       }
+      this.setState({
+        cart: miniCartArray,
+        innerContainer
+      });
     }
   }
 
@@ -349,17 +354,20 @@ class Products extends Component {
 
     const getCategoryName = name => (`${name.substring(0, 1).toUpperCase() + name.slice(1)}`);
 
-    const liCateories = categories.map(item => {
-      const liName = getCategoryName(item.name);
-      return (
-        <li
-          key={item.name}
-          onClick={() => this.linkClick(item.name)}
-          className={this.isSelected(item.name)}>
-          {liName}
-        </li>
-      );
-    });
+    let liCateories = [];
+    if (categories.length !== 0) {
+      liCateories = categories.map(item => {
+        const liName = getCategoryName(item.name);
+        return (
+          <li
+            key={item.name}
+            onClick={() => this.linkClick(item.name)}
+            className={this.isSelected(item.name)}>
+            {liName}
+          </li>
+        );
+      });
+    }
 
     return (
       <div className={'wrapper' + wrapperBackground} onClick={this.commonClick}>
@@ -390,6 +398,7 @@ class Products extends Component {
           <Details
             key={'detail'}
             state={this.state}
+            client={client}
             onChangeQuantity={this.addToCart}
             onChangeAttribute={this.onChangeAttribute}
             setSelectedAttributes={this.setSelectedAttributes}

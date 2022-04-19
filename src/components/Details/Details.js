@@ -5,7 +5,7 @@ import './Details.css';
 class Details extends Component {
     constructor(props) {
         super(props);
-        this.state = { detailAttributes: [] }
+        this.state = { reset: false };
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
         this.onChangeDetailAttribute = this.onChangeDetailAttribute.bind(this);
         this.createMarkup = this.createMarkup.bind(this);
@@ -56,17 +56,15 @@ class Details extends Component {
         const {
             state:
             {
-                products,
-                productId,
                 detailsIsVisible,
                 symbol,
                 innerContainer,
                 attributes: propsAttributes,
                 dbAttributes,
-                image
+                image,
+                detail
             }
         } = this.props;
-        const detail = products.filter((item) => (item.id === productId));
         let divDetail = '';
         if (detailsIsVisible && detail.length !== 0) {
             let detailAttributes = propsAttributes;
