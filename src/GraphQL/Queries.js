@@ -72,4 +72,34 @@ query($id: String!) {
       }
       gallery
   }
-}`
+}`;
+
+export const LOAD_CATEGORY = gql`
+query($CategoryInput: CategoryInput){
+  category(input: $CategoryInput){
+    name
+    products {
+      id
+      name
+      inStock
+      brand
+      description
+      category
+      prices {
+        amount
+        currency {
+          label
+          symbol
+        }
+      }
+      attributes {
+        id
+        items {
+          displayValue
+          value
+        }
+      }
+      gallery
+    }
+  }
+}`;

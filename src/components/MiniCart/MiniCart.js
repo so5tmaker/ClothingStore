@@ -9,8 +9,8 @@ class MiniCart extends Component {
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
     }
 
-    onChangeQuantity(id, sign = 1, mcId) {
-        this.props.onChangeQuantity(id, sign, mcId);
+    onChangeQuantity(e, id, sign = 1, mcId) {
+        this.props.onChangeQuantity(e, id, sign, mcId);
     }
 
     render() {
@@ -62,9 +62,9 @@ class MiniCart extends Component {
                                 {miniCartAttributesList}
                             </div>
                             <div className="mc-col-quantity">
-                                <div className="quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id, 1, mcId)}>+</div>
+                                <div className="quantity-switcher-plus" onClick={(e) => this.onChangeQuantity(e, item.product.id, 1, mcId)}>+</div>
                                 <div className="quantity">{item.quantity}</div>
-                                <div className="quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1, mcId)}>−</div>
+                                <div className="quantity-switcher-minus" onClick={(e) => this.onChangeQuantity(e, item.product.id, -1, mcId)}>−</div>
                             </div>
                             <div className="mc-col-image"><img src={item.product.gallery[0]} alt={item.product.name} /></div>
                         </div>)
@@ -72,7 +72,7 @@ class MiniCart extends Component {
             divMiniCart =
                 <MiniCartContainer
                     border={innerContainer !== '' && detailsIsVisible}
-                    overflow={miniCartArray.length > 3}
+                    overflows={miniCartArray.length > 3}
                     left={left - 350}
                 >
                     <div key={'mini-cart-key'} className="mini-cart-title"><strong>My Bag, </strong>{miniCartArray.length} items</div>

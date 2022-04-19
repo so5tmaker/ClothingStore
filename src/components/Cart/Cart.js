@@ -9,8 +9,8 @@ class Cart extends Component {
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
     }
 
-    onChangeQuantity(id, sign = 1) {
-        this.props.onChangeQuantity(id, sign);
+    onChangeQuantity(e, id, sign = 1) {
+        this.props.onChangeQuantity(e, id, sign);
     }
 
     render() {
@@ -45,9 +45,9 @@ class Cart extends Component {
                             </div>
                         </div>
                         <div className="cart-col-quantity">
-                            <div className="cart-quantity-switcher-minus" onClick={() => this.onChangeQuantity(item.product.id, -1)}>−</div>
+                            <div className="cart-quantity-switcher-minus" onClick={(e) => this.onChangeQuantity(e, item.product.id, -1)}>−</div>
                             <div className="cart-quantity">{item.quantity}</div>
-                            <div className="cart-quantity-switcher-plus" onClick={() => this.onChangeQuantity(item.product.id)}>+</div>
+                            <div className="cart-quantity-switcher-plus" onClick={(e) => this.onChangeQuantity(e, item.product.id)}>+</div>
                         </div>
                         <div className="cart-image">
                             <ImageSlider slides={item.product.gallery} />

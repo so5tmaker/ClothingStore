@@ -14,8 +14,8 @@ class Details extends Component {
 
     createMarkup(discription) { return { __html: discription }; };
 
-    onChangeQuantity(id, sign = 1) {
-        this.props.onChangeQuantity(id, sign);
+    onChangeQuantity(e, id, sign = 1) {
+        this.props.onChangeQuantity(e, id, sign);
     }
 
     onChangeImage(e) {
@@ -110,7 +110,7 @@ class Details extends Component {
                             <div key={'details-amount'} className="detail-amount">
                                 {symbol + price}
                             </div>
-                            <div key={'details-button'} className="detaill-button" onClick={() => this.onChangeQuantity(item.id, 1)}>add to cart</div>
+                            <div key={'details-button'} className="detaill-button" onClick={(e) => this.onChangeQuantity(e, item.id, 1)}>add to cart</div>
                             <div key={'details-description'} className="detail-description"
                                 dangerouslySetInnerHTML={this.createMarkup(item.description)}
                             />

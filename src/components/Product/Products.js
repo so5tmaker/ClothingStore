@@ -5,7 +5,7 @@ import Cart from "../Cart/Cart";
 import Details from "../Details/Details";
 import Currency from "../Currencies/Currency";
 import { client } from '../../index';
-import { LOAD_PRODUCTS, LOAD_ATTRIBUTES, LOAD_PRODUCT } from '../../GraphQL/Queries';
+import { LOAD_PRODUCTS, LOAD_ATTRIBUTES, LOAD_PRODUCT, LOAD_CATEGORY } from '../../GraphQL/Queries';
 
 class Products extends Component {
   constructor(props) {
@@ -96,11 +96,17 @@ class Products extends Component {
     });
   }
 
-  linkClick(category) {
-    const { products } = this.state.categories.filter(item => item.name === category)[0];
+  async linkClick(title) {
+    const response = await client.query({
+      query: LOAD_CATEGORY,
+      variables: { input: { title: title } }
+    })
+    const { category } = response.data;
+    const { products } = category;
     this.setState({
       products,
-      category,
+      category: title,
+      categories: category,
       detailsIsVisible: false,
       attributes: [],
       image: ''
@@ -138,31 +144,13 @@ class Products extends Component {
     }
   }
 
-  getModalVisibility(e, selector) {
-    let parent = document.querySelector(selector);
-    if (parent !== null) {
-      return parent.contains(e.target);
-    }
-    return false;
-  }
-
-  commonClick(e) {
-    const className = e.target.className;
-    const doNotCloseCart = this.getModalVisibility(e, '.cart-container');
-    let cartIsVisible = className === 'open-cart';
-    if (this.state.cartIsVisible && (className === 'vector' || className === 'currency-item')) {
-      cartIsVisible = true;
-    }
-    if (!doNotCloseCart) {
-      const miniCartIsVisible = (className === "cart" ||
-        className === "round") && this.state.cart.length !== 0;
-      const innerContainer = miniCartIsVisible ? 'inner-container' : '';
-      this.setState({
-        cartIsVisible: cartIsVisible,
-        innerContainer: innerContainer,
-        divOrientation: { top: e.clientY, left: e.clientX }
-      });
-    }
+  commonClick() {
+    this.setState({
+      currencyIsVisible: false,
+      miniCartIsVisible: false,
+      cartIsVisible: false,
+      innerContainer: ''
+    });
   }
 
   onMiniCartClick(e) {
@@ -271,7 +259,8 @@ class Products extends Component {
     return attributeText;
   }
 
-  async addToCart(id, sign = 1, mcId = '') {
+  async addToCart(e, id, sign = 1, mcId = '') {
+    e.stopPropagation();
     const { cart: miniCartArray, attributes } = this.state;
     const product = await this.getProduct(id);
     let productAttributes = attributes;
@@ -327,6 +316,7 @@ class Products extends Component {
   render() {
     const {
       category,
+      categories,
       innerContainer,
       currencyIsVisible,
       cartIsVisible,
@@ -357,13 +347,25 @@ class Products extends Component {
       wrapperBackground = ' wrapper-background';
     }
 
+    const getCategoryName = name => (`${name.substring(0, 1).toUpperCase() + name.slice(1)}`);
+
+    const liCateories = categories.map(item => {
+      const liName = getCategoryName(item.name);
+      return (
+        <li
+          key={item.name}
+          onClick={() => this.linkClick(item.name)}
+          className={this.isSelected(item.name)}>
+          {liName}
+        </li>
+      );
+    });
+
     return (
-      <div className={'wrapper' + wrapperBackground} onClick={(e) => this.commonClick(e)}>
+      <div className={'wrapper' + wrapperBackground} onClick={this.commonClick}>
         <div className='container'>
           <div className='navbar'>
-            <li onClick={e => this.linkClick('all')} className={this.isSelected('all')}>All</li>
-            <li onClick={e => this.linkClick('tech')} className={this.isSelected('tech')}>Tech</li>
-            <li onClick={e => this.linkClick('clothes')} className={this.isSelected('clothes')}>Clothes</li>
+            {liCateories}
             <li ></li>
             <li className="image"></li>
             <li className="symbol">{symbol}</li>
@@ -374,7 +376,7 @@ class Products extends Component {
           {
             (!cartIsVisible && !detailsIsVisible) &&
             (<div className={'product-content ' + innerContainer}>
-              <h2>{`${category.substring(0, 1).toUpperCase() + category.slice(1)}`}</h2>
+              <h2>{getCategoryName(category)}</h2>
               <div className='product-items'>
                 {ProductList}
               </div>
