@@ -12,12 +12,8 @@ export const client = new ApolloClient({
   uri: 'http://localhost:4000/',
   cache: new InMemoryCache({
     typePolicies: {
-      Query: {
-        fields: {
-          product: {
-            keyArgs: ["id"],
-          },
-        },
+      AttributeSet: {
+        keyFields: ["items"]
       },
     },
   }),
