@@ -7,10 +7,15 @@ class MiniCart extends Component {
     constructor(props) {
         super(props);
         this.onChangeQuantity = this.onChangeQuantity.bind(this);
+        this.onMiniCartClick = this.onMiniCartClick.bind(this);
     }
 
     onChangeQuantity(e, id, sign = 1, mcId) {
         this.props.onChangeQuantity(e, id, sign, mcId);
+    }
+
+    onMiniCartClick(e) {
+        e.stopPropagation();
     }
 
     render() {
@@ -25,7 +30,8 @@ class MiniCart extends Component {
                 miniCartIsVisible,
                 symbol,
                 innerContainer,
-                detailsIsVisible
+                detailsIsVisible,
+                cartIsVisible
             }
         } = this.props;
         let divMiniCart = '';
@@ -71,7 +77,8 @@ class MiniCart extends Component {
                 });
             divMiniCart =
                 <MiniCartContainer
-                    border={innerContainer !== '' && detailsIsVisible}
+                    onClick={this.onMiniCartClick}
+                    border={innerContainer !== '' && (detailsIsVisible || cartIsVisible)}
                     overflows={miniCartArray.length > 3}
                     left={left - 350}
                 >
@@ -79,7 +86,7 @@ class MiniCart extends Component {
                     {miniCartList}
                     <div className="mc-total">
                         <div>Total</div>
-                        <div>{symbol + miniCartAmount}</div>
+                        <div>{symbol + miniCartAmount.toFixed(2)}</div>
                     </div>
                     <div className="mc-buttons">
                         <div onClick={this.props.cartVeiwClick} className="open-cart">view bag</div>

@@ -31,7 +31,7 @@
   font-weight: 400;
   font-size: 30px;
   line-height: 27px;
-  margin-bottom: 27px;
+  margin-bottom: 16px;
 }
 
 .details-brand {
@@ -106,6 +106,12 @@
   text-transform: uppercase;
   text-align: center;
   margin-bottom: 40px;
+}
+
+.detaill-button-out {
+  background-color: #ededed;
+  color: #a6a6a6;
+  cursor: text;
 }
 
 .detail-description {

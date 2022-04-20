@@ -66,12 +66,6 @@
   margin-bottom: 24px;
 }
 
-.cart-image img {
-  height: 185px;
-  width: 141px;
-  margin-left: 10px;
-}
-
 .cart-quantity-switcher-plus,
 .cart-quantity-switcher-minus {
   width: 45px;

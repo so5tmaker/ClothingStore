@@ -8,16 +8,16 @@ class Attribute extends Component {
         this.onChangeAttribute = this.onChangeAttribute.bind(this);
     }
 
-    onChangeAttribute(productId, attributeId, displayValue, detail) {
+    onChangeAttribute(e, productId, attributeId, displayValue, detail) {
         if (detail) {
             this.props.onChangeDetailAttribute(attributeId, displayValue);
         } else {
-            this.props.onChangeAttribute(productId, attributeId, displayValue);
+            this.props.onChangeAttribute(e, productId, attributeId, displayValue);
         }
     }
 
     render() {
-        const { productId, attributes, attribute, detail } = this.props;
+        const { productId, attributes, attribute, detail, inStock } = this.props;
         let divMiniCartItem = '';
         let mcItems = '';
         if (attribute.id === "Color") {
@@ -28,13 +28,14 @@ class Attribute extends Component {
                 idItemAttribute = idItemAttribute.items;
             }
             mcItems = idItemAttribute.map(item => {
+                const fnOnClick = (e) => this.onChangeAttribute(e, productId, attribute.id, item.displayValue, detail);
                 return (
                     <AttributesBox
                         key={attribute.id + '-' + item.displayValue}
-                        detail={detail}
+                        detail={detail && inStock}
                         selected={item.selected}
                         background={item.value}
-                        onClick={detail ? () => this.onChangeAttribute(productId, attribute.id, item.displayValue, detail) : ''}
+                        onClick={detail && inStock ? fnOnClick : ''}
                     />
                 )
             });
@@ -57,14 +58,17 @@ class Attribute extends Component {
                 if (attributeValue !== undefined) {
                     displayValue = attributeValue.value;
                 }
+                const fnOnClick = (e) => this.onChangeAttribute(e, productId, attribute.id, item.displayValue, detail);
                 return (
                     <AttributesBox
                         key={attribute.id + '-' + item.displayValue}
-                        detail={detail}
+                        detail={detail && inStock}
                         selected={item.selected}
                         background={item.selected ? '#1d1f22' : 'white'}
-                        onClick={detail ? () => this.onChangeAttribute(productId, attribute.id, item.displayValue, detail) : ''}
-                    >{displayValue}</AttributesBox>
+                        onClick={detail && inStock ? fnOnClick : ''}
+                    >
+                        {displayValue}
+                    </AttributesBox>
                 )
             });
         }

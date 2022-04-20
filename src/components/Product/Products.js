@@ -108,6 +108,7 @@ class Products extends Component {
       products,
       category: title,
       detailsIsVisible: false,
+      cartIsVisible: false,
       attributes: [],
       dbAttributes: [],
       image: ''
@@ -149,7 +150,6 @@ class Products extends Component {
     this.setState({
       currencyIsVisible: false,
       miniCartIsVisible: false,
-      cartIsVisible: false,
       innerContainer: ''
     });
   }
@@ -263,7 +263,7 @@ class Products extends Component {
 
   async addToCart(e, id, sign = 1, mcId = '') {
     e.stopPropagation();
-    const { cart: miniCartArray, attributes } = this.state;
+    const { cart: miniCartArray, attributes, miniCartIsVisible } = this.state;
     const product = await this.getProduct(id);
     let productAttributes = attributes;
     if (attributes.length === 0) {
@@ -282,19 +282,27 @@ class Products extends Component {
       if (quantity === 0) {
         miniCartArray.splice(indexProduct, 1);
       }
+
       let innerContainer = 'inner-container';
       if (miniCartArray.length === 0) {
         localStorage.setItem('cart', JSON.stringify(miniCartArray));
         innerContainer = '';
       }
+      let mcIsVisible = miniCartIsVisible;
+      if (e.target.className === 'detaill-button' || e.target.className === 'button-cart') {
+        innerContainer = '';
+        mcIsVisible = false;
+      }
       this.setState({
         cart: miniCartArray,
-        innerContainer
+        innerContainer,
+        miniCartIsVisible: mcIsVisible
       });
     }
   }
 
-  onChangeAttribute(productId, attributeId, displayValue) {
+  onChangeAttribute(e, productId, attributeId, displayValue) {
+    e.stopPropagation();
     const miniCartArray = this.state.cart;
     const indexProduct = miniCartArray.findIndex(aId => aId.product.id === productId);
     if (indexProduct !== -1) {
@@ -394,6 +402,8 @@ class Products extends Component {
             state={this.state}
             onChangeQuantity={this.addToCart}
             onChangeAttribute={this.onChangeAttribute}
+            onCommonClick={this.commonClick}
+            getItemAtributesId={this.getItemAtributesId}
           />
           <Details
             key={'detail'}
@@ -404,6 +414,7 @@ class Products extends Component {
             setSelectedAttributes={this.setSelectedAttributes}
             changeAttributes={this.changeAttributes}
             onChangeImage={this.onChangeImage}
+            getItemAtributesId={this.getItemAtributesId}
           />
           <MiniCart
             state={this.state}

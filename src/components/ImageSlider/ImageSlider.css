@@ -5,22 +5,39 @@
   font-weight: 700;
   font-size: 20px;
   line-height: 40px;
-  border: 2px solid #ffffff;
 }
 
 .left-arrow:hover,
 .right-arrow:hover {
-  color: #5ece7b;
+  background-color: #5ece7b;
   cursor: pointer;
   font-size: 40px;
 }
 
 .left-arrow {
+  position: absolute;
   background: url("../../images/left.svg") no-repeat;
-  margin: -120px 0px -43px 40px;
+  margin: -100px 0px 0px 40px;
+  padding: 5px 5px 10px 5px;
 }
 
 .right-arrow {
+  position: absolute;
   background: url("../../images/right.svg") no-repeat;
-  margin: -10px 0px -24px 105px;
+  margin: -100px 0px 0px 100px;
+  padding: 5px 5px 10px 5px;
+}
+
+.slider {
+  height: 185px;
+  width: 141px;
+  margin-left: 10px;
+}
+
+.slider img {
+  max-width: 100%;
+  max-height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
 }

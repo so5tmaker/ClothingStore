@@ -18,7 +18,8 @@ class ImageSlider extends Component {
         this.setState({ currentSlide: index });
     }
 
-    nextSlide() {
+    nextSlide(e) {
+        e.stopPropagation();
         let newSlide =
             this.state.currentSlide === this.slides.length - 1
                 ? 0
@@ -26,7 +27,8 @@ class ImageSlider extends Component {
         this.setState({ currentSlide: newSlide });
     }
 
-    prevSlide() {
+    prevSlide(e) {
+        e.stopPropagation();
         let newSlide =
             this.state.currentSlide === 0
                 ? this.slides.length - 1
@@ -38,22 +40,24 @@ class ImageSlider extends Component {
         const { slides } = this.props;
 
         return (
-            <section className='slider'>
-                {slides.map((slide, index) => {
-                    return (
-                        <div
-                            className={index === this.state.currentSlide ? 'slide active' : 'slide'}
-                            key={index}
-                        >
-                            {index === this.state.currentSlide && (
-                                <img src={slide} alt='webstore' />
-                            )}
-                        </div>
-                    );
-                })}
-                <div className='left-arrow' onClick={this.prevSlide}>&lt;</div>
-                <div className='right-arrow' onClick={this.nextSlide}>&gt;</div>
-            </section>
+            <>
+                <section className='slider'>
+                    {slides.map((slide, index) => {
+                        return (
+                            <div
+                                className={index === this.state.currentSlide ? 'slide active' : 'slide'}
+                                key={index}
+                            >
+                                {index === this.state.currentSlide && (
+                                    <img src={slide} alt='webstore' />
+                                )}
+                            </div>
+                        );
+                    })}
+                </section>
+                <div className='left-arrow' onClick={this.prevSlide} />
+                <div className='right-arrow' onClick={this.nextSlide} />
+            </>
         );
     }
 };

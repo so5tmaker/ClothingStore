@@ -14,8 +14,8 @@ class Details extends Component {
 
     createMarkup(discription) { return { __html: discription }; };
 
-    onChangeQuantity(e, id, sign = 1) {
-        this.props.onChangeQuantity(e, id, sign);
+    onChangeQuantity(e, id, sign = 1, mcId) {
+        this.props.onChangeQuantity(e, id, sign, mcId);
     }
 
     onChangeImage(e) {
@@ -80,13 +80,19 @@ class Details extends Component {
                             productId={item.id}
                             attributes={detailAttributes}
                             attribute={attribute}
-                            detail={true}
+                            detail={detail}
+                            inStock={item.inStock}
                         />
                     });
                     const price = item.prices.filter(price => price.currency.symbol === symbol)[0].amount;
                     const imageList = item.gallery.map(image => (
                         <img onClick={this.onChangeImage} key={'image' + image} src={image} alt='' />
                     ));
+                    const mcId = item.id + this.props.getItemAtributesId(detailAttributes);
+                    let divButton = <div key={'details-button'} className="detaill-button detaill-button-out">out of stock</div>
+                    if (item.inStock) {
+                        divButton = <div key={'details-button'} className="detaill-button" onClick={(e) => this.onChangeQuantity(e, item.id, 1, mcId)}>add to cart</div>
+                    }
                     return (<div key={item.id + '-detail'} className="details-item">
                         <div key={item.id + '-detail-image'} className="image-gallery">
                             {imageList}
@@ -108,7 +114,7 @@ class Details extends Component {
                             <div key={'details-amount'} className="detail-amount">
                                 {symbol + price}
                             </div>
-                            <div key={'details-button'} className="detaill-button" onClick={(e) => this.onChangeQuantity(e, item.id, 1)}>add to cart</div>
+                            {divButton}
                             <div key={'details-description'} className="detail-description"
                                 dangerouslySetInnerHTML={this.createMarkup(item.description)}
                             />
