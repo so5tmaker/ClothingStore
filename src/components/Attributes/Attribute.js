@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import './Attribute.css';
-import { AttributesBox } from './Attribute.styled';
+import { AttributesBox, DivBorder } from './Attribute.styled';
 
 class Attribute extends Component {
     constructor(props) {
@@ -30,13 +30,16 @@ class Attribute extends Component {
             mcItems = idItemAttribute.map(item => {
                 const fnOnClick = (e) => this.onChangeAttribute(e, productId, attribute.id, item.displayValue, detail);
                 return (
-                    <AttributesBox
-                        key={attribute.id + '-' + item.displayValue}
-                        detail={detail && inStock}
-                        selected={item.selected}
-                        background={item.value}
-                        onClick={detail && inStock ? fnOnClick : ''}
-                    />
+                    <DivBorder selected={item.selected} key={attribute.id + '-' + item.displayValue + " divBorder"}>
+                        <AttributesBox
+                            key={attribute.id + '-' + item.displayValue}
+                            detail={detail && inStock}
+                            selected={item.selected}
+                            background={item.value}
+                            bordered={item.selected ? 'white 1px solid' : ''}
+                            onClick={detail && inStock ? fnOnClick : ''}
+                        />
+                    </DivBorder>
                 )
             });
         } else {
@@ -65,6 +68,7 @@ class Attribute extends Component {
                         detail={detail && inStock}
                         selected={item.selected}
                         background={item.selected ? '#1d1f22' : 'white'}
+                        bordered={'solid 1px ' + (item.selected ? 'black' : '#A6A6A6')}
                         onClick={detail && inStock ? fnOnClick : ''}
                     >
                         {displayValue}

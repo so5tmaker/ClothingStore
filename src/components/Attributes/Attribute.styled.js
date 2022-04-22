@@ -8,14 +8,24 @@ const StyledAttributesBox = styled.div`
   font-size: 16px;
   letter-spacing: 0.05em;
   color: ${({ selected }) => (selected ? 'white' : '#1d1f22')};
-  width: 63px;
-  height: 45px;
+  width: ${({ selected }) => (selected ? '61' : '63')}px;
+  height: ${({ selected }) => (selected ? '43' : '45')}px;
   line-height: 45px;
   text-align: center;
   cursor: ${props => props.detail ? 'pointer' : 'text'};
   background: ${({ background }) => background};
-  border: 1px solid ${({ selected }) => (selected ? '#1d1f22' : '#A6A6A6')};
+  border:${({ bordered }) => (bordered)};
 `;
+
+const StyledDivBorder = styled.div`{
+  height: 45px;
+  width: 63px;
+  border: ${({ selected }) => (selected ? '#44ff03 1px solid' : '')};
+}`;
+
+export const DivBorder = (props) => {
+  return <StyledDivBorder {...props} />
+};
 
 export const AttributesBox = (props) => {
   return <StyledAttributesBox {...props} />
