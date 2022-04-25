@@ -5,7 +5,7 @@ import Cart from "../Cart/Cart";
 import Details from "../Details/Details";
 import Currency from "../Currencies/Currency";
 import { client } from '../../index';
-import { LOAD_ALL, LOAD_ATTRIBUTES, LOAD_PRODUCT, LOAD_CATEGORY } from '../../GraphQL/Queries';
+import { LOAD_ATTRIBUTES, LOAD_PRODUCT, LOAD_CATEGORY } from '../../GraphQL/Queries';
 
 class Products extends Component {
   constructor(props) {
@@ -41,6 +41,7 @@ class Products extends Component {
     this.changeAttributes = this.changeAttributes.bind(this);
     this.onChangeImage = this.onChangeImage.bind(this);
     this.getAttributes = this.getAttributes.bind(this);
+    this.getCategory = this.getCategory.bind(this);
     this.addNewItemInCart = this.addNewItemInCart.bind(this);
     this.getSelectedItems = this.getSelectedItems.bind(this);
     this.getItemAtributesId = this.getItemAtributesId.bind(this);
@@ -56,11 +57,8 @@ class Products extends Component {
 
   componentDidMount = async () => {
     if (this.state.categories.length === 0) {
-      const response = await client.query({
-        query: LOAD_ALL,
-        variables: { CategoryInput: { title: 'all' } }
-      })
-      const { categories, category: { products }, currencies } = response.data;
+      const response = await this.getCategory();
+      const { categories, category: { products }, currencies } = response;
       this.setState({
         categories,
         currencies,
@@ -99,11 +97,8 @@ class Products extends Component {
   }
 
   async linkClick(title) {
-    const response = await client.query({
-      query: LOAD_CATEGORY,
-      variables: { CategoryInput: { title } }
-    })
-    const { category: { products } } = response.data;
+    const response = await this.getCategory(title);
+    const { category: { products } } = response;
     this.setState({
       products,
       category: title,
@@ -173,6 +168,18 @@ class Products extends Component {
       miniCartIsVisible: false,
       divOrientation: { top: e.clientY, left: e.clientX }
     });
+  }
+
+  async getCategory(title = '') {
+    const response = await client.query({
+      query: LOAD_CATEGORY,
+      variables: {
+        CategoryInput: {
+          title: title === '' ? this.state.category : title
+        }
+      }
+    })
+    return response.data;
   }
 
   async getAttributes(productId) {

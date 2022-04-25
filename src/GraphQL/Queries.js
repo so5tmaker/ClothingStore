@@ -105,4 +105,11 @@ query($CategoryInput: CategoryInput){
       gallery
     }
   }
+  categories {
+    name
+  }
+  currencies {
+    label
+    symbol
+  }
 }`;

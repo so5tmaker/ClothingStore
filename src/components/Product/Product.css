@@ -1,6 +1,10 @@
-.product-container {
+.product-container,
+.product-out {
   width: 386px;
   height: 444px;
+}
+
+.product-container {
   transition: 0.3s;
   animation: ease-in-out;
   margin-bottom: 103px;
@@ -10,6 +14,22 @@
   transform: scale(1);
   height: 446px;
   box-shadow: 0px 4px 35px rgba(168, 172, 176, 0.19);
+}
+
+.button-cart {
+  display: none;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  line-height: 52px;
+  margin: -50px 0px 0px 303px;
+  background: url(../../images/green-card.png) no-repeat;
+}
+
+.product-container:hover .button-cart {
+  display: block;
+  position: absolute;
+  cursor: pointer;
 }
 
 .image-container {
@@ -29,6 +49,7 @@
 
 .image-opacity {
   opacity: 0.4;
+  cursor: text;
 }
 
 .product-title,
@@ -43,22 +64,6 @@
 
 .product-title {
   font-weight: 300;
-}
-
-.button-cart {
-  display: none;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  line-height: 52px;
-  margin: -50px 0px 0px 303px;
-  background: url(../../images/green-card.png) no-repeat;
-}
-
-.product-container:hover .button-cart {
-  display: block;
-  position: absolute;
-  cursor: pointer;
 }
 
 .product-price {

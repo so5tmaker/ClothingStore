@@ -27,11 +27,15 @@ class Product extends Component {
       divButtonCart = '';
     }
     let opacity = '';
+    let divContainer = 'product-container';
+    let fnOnClick = (e) => (this.props.onOpenDetails(e, id));
     if (innerContainer !== '') {
       opacity = ' image-opacity';
+      divContainer = 'out-container';
+      fnOnClick = '';
     }
     return (
-      <div className="product-container" onClick={(e) => (this.props.onOpenDetails(e, id))}>
+      <div className={divContainer} onClick={fnOnClick}>
         <div className={"image-container" + imgOutOfStock + opacity}>
           <img src={gallery[0]} alt={name} />
         </div>
